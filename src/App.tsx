@@ -8,7 +8,7 @@ export default function App() {
       <div>
         <Routes>
           {/* Navigate to "Labs" or "Kanbas" by default? */}
-          <Route path="/" element={<Navigate to="Labs" />} />
+          <Route path="/" element={<Navigate to="Kanbas" />} />
 
           <Route path="/Labs/*" element={<Labs />} />
           <Route path="/Kanbas/*" element={<Kanbas />} />
