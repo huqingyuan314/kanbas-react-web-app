@@ -8,10 +8,6 @@ export default function Kanbas() {
       <h1>Kanbas</h1>
       <Account />
 
-      <br/>
-      Go to 
-      <Link to="/Labs"> Labs</Link>
-        <br/>
 
     </div>
 

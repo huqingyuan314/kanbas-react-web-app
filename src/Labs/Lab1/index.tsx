@@ -177,7 +177,7 @@ Your favorite books (in no particular order)
   <h4>Form Elements</h4>
   <form id="wd-text-fields">
     <h5>Text Fields</h5>
-    <label htmlFor="wd-text-fields-username">Username:</label>
+    <label htmlFor ="wd-text-fields-username">Username:</label>
     <input id="wd-text-fields-username" placeholder="jdoe" /> 
     <br />
     <label htmlFor="wd-text-fields-password">Password:</label>
@@ -271,18 +271,18 @@ Your favorite books (in no particular order)
 <input type="number"
       id="wd-text-fields-salary-start"
       placeholder="1000"
-      value="100000"/><br/>
+      defaultValue="100000"/><br/>
 
 <label htmlFor="wd-text-fields-rating"> Rating: </label>
 <input type="range" id="wd-text-fields-rating"
       placeholder="Doe"
       max="5"
-      value="4"/><br/>
+      defaultValue="4"/><br/>
 
 <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
 <input type="date"
       id="wd-text-fields-dob"
-      value="2000-01-21"/><br/>
+      defaultValue="2000-01-21"/><br/>
 
 </div>
 
@@ -292,6 +292,7 @@ Please
 to get dummy text<br/>
 Go to the code repository on 
 <a id="wd-github" href="https://github.com/huqingyuan314/kanbas-react-web-app"> Github </a>
+<br/>
 <br/>
 
       </div>
