@@ -7,7 +7,7 @@ export default function Labs() {
   return (
     <div>
       <h1>Labs</h1>
-      <h3>Qingyuan Hu</h3>
+      <h3>Qingyuan Hu (SEC 01 Fall 2024)</h3>
       <TOC />
       
       <Routes>
