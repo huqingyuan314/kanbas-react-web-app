@@ -8,11 +8,6 @@ export default function Kanbas() {
       <h1>Kanbas</h1>
       <Account />
 
-
     </div>
-
-
-
-
   );
 }
