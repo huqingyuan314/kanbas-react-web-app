@@ -7,9 +7,7 @@ export default function App() {
   return (
     <HashRouter>
       <div>
-        <Link to="/Labs">Labs</Link> | <Link to="/Kanbas">Kanbas</Link>
-        <hr />
-        
+
         <Routes>
           <Route path="/" element={<Navigate to="Kanbas" />} />
           
