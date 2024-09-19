@@ -22,6 +22,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -38,6 +39,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -54,6 +56,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -70,6 +73,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -86,6 +90,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -102,6 +107,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -118,6 +124,7 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         <div className="wd-dashboard-course">
           <Link className="wd-dashboard-course-link"
@@ -134,9 +141,10 @@ export default function Dashboard() {
             </div>
           </Link>
         </div>
+        <br />
 
         {/* <div className="wd-dashboard-course"> ... </div> */}
-        
+
       </div>
     </div>
   );
