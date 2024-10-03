@@ -6,14 +6,6 @@ import ModuleControlButtons from "./ModuleControlButtons";
 export default function Modules() {
     return (
       <div>
-        {/* Implement Collapse All button, View Progress button, etc. */}
-        {/* <button>Collapse All</button> 
-        <button>View Progress</button> 
-        <select>
-            <option value="PUBLISH ALL" selected>Publish All</option>
-            <option value="PUBLISH SELECTED" >Publish Selected</option>
-        </select>
-        <button>+ Module</button> */}
 
 <ModulesControls /><br /><br /><br /><br />
 
