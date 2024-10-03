@@ -1,3 +1,5 @@
+import "./styles.css"
+
 import { Routes, Route, Navigate } from "react-router";
 import { Link } from "react-router-dom";
 import Account from "./Account";
@@ -9,16 +11,11 @@ export default function Kanbas() {
   return (
     <div id="wd-kanbas">
 
-      <h1>Kanbas</h1>
+      {/* <h1>Kanbas</h1> */}
 
-      <table>
+      <KanbasNavigation />
 
-        <tr>
-          <td valign="top">
-            <KanbasNavigation />
-          </td>
-
-          <td valign="top">
+    <div className="wd-main-content-offset p-3">
       <Routes>
         <Route path="/" element={<Navigate to="Account" />} />
         <Route path="/Account/*" element={<Account />} />
@@ -27,10 +24,8 @@ export default function Kanbas() {
         <Route path="/Calendar" element={<h1>Calendar</h1>} />
         <Route path="/Inbox" element={<h1>Inbox</h1>} />
       </Routes>
-          </td>
+    </div>
 
-        </tr>
-      </table>
     </div>
   );
 }
