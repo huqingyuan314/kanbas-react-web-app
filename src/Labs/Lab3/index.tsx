@@ -1,11 +1,13 @@
 export default function Lab3() {
-    return (
-      <div>
-        <hr />
-        <h2>Lab 3</h2>
-        <hr />
-      </div>
-    );
-  }
-  
-  
+  return (
+    <div id="wd-lab3" className="container-fluid">
+<hr />
+
+      <h3>Lab 3</h3>
+
+
+
+      <hr />
+    </div>
+  );
+}
