@@ -1,6 +1,7 @@
 import "./styles.css"
 
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 import { AiOutlineDashboard } from "react-icons/ai";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { LuCalendarDays } from "react-icons/lu";
@@ -8,16 +9,18 @@ import { HiOutlineInboxArrowDown } from "react-icons/hi2";
 import { GoGear } from "react-icons/go";
 import { GrBook } from "react-icons/gr";
 
-import { useState } from 'react';
-
 
 export default function KanbasNavigation() {
 
-    const location = useLocation();  // Get current location
-
-    // Get query params from location.search
-    const searchParams = new URLSearchParams(location.search);
-    const section = searchParams.get("section");  // Extract the 'section' query param
+   const { pathname } = useLocation();
+   const links = [
+     { label: "Dashboard", path: "/Kanbas/Dashboard", icon: AiOutlineDashboard },
+     { label: "Courses",   path: "/Kanbas/Dashboard", icon: GrBook },
+     { label: "Calendar",  path: "/Kanbas/Calendar",  icon: LuCalendarDays },
+     { label: "Inbox",     path: "/Kanbas/Inbox",     icon: HiOutlineInboxArrowDown },
+     { label: "Labs",      path: "/Labs",             icon: GoGear },
+   ];
+ 
 
   return (
 
@@ -30,56 +33,23 @@ export default function KanbasNavigation() {
    className="list-group-item bg-black border-0 text-center">
    <img src="/images/NEU.png" width="75px" /></a>
 
-{/* Account Link */}
- <NavLink to="/Kanbas/Account" id="wd-account-link"
-className={({ isActive }) => 
-    isActive ? "nav-link text-center border-0 active" : "nav-link text-center border-0"}>
-   <FaRegCircleUser className="fs-1" /><br />
-   Account </NavLink>
+{/* Other Links in array */}
+   <Link to="/Kanbas/Account" className={`list-group-item text-center border-0 bg-black
+            ${pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"}`}>
+        <FaRegCircleUser className={`fs-1 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />
+        <br />
+        Account
+      </Link>
 
-{/* Dashboard Link */}
- <NavLink to="/Kanbas/Dashboard?section=dashboard" id="wd-dashboard-link"
-        className={
-          section === "dashboard" ? "nav-link text-center border-0 active" : "nav-link text-center border-0"
-        }
-      >
-   <AiOutlineDashboard className="fs-1 text-danger" /><br />
-   Dashboard </NavLink>
-
-{/* Courses Link */}
- <NavLink to="/Kanbas/Dashboard?section=courses" id="wd-course-link"
-    className={
-        section === "courses" ? "nav-link text-center border-0 active" : "nav-link text-center border-0"
-      }
-    >
-   <GrBook className="fs-3 text-danger" /><br />
-   Courses </NavLink>
-
-{/* Calendar Link */}
-   <NavLink to="/Kanbas/Calendar" id="wd-calendar-link"
-className={({ isActive }) => 
-    isActive ? "nav-link text-center border-0 active" : "nav-link text-center border-0"}>
-   <LuCalendarDays className="fs-2 text-danger" /><br />
-   Calendar </NavLink>
-
-{/* Inbox Link */}
-   <NavLink to="/Kanbas/Inbox" id="wd-inbox-link"
-className={({ isActive }) => 
-    isActive ? "nav-link text-center border-0 active" : "nav-link text-center border-0"}>
-   <HiOutlineInboxArrowDown className="fs-2 text-danger" /><br />
-   Inbox </NavLink>
-
-{/* Labs Link */}
-   <NavLink to="/Labs" id="wd-labs-link"
-   className="list-group-item text-white bg-black text-center border-0">
-   <GoGear className="fs-2 text-danger" /><br />
-   Labs </NavLink>
-
- {/* complete styling the rest of the links */}
-
+      {links.map((link) => (
+        <Link key={link.path} to={link.path} className={`list-group-item bg-black text-center border-0
+              ${pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"}`}>
+          {link.icon({ className: "fs-1 text-danger"})}
+          <br />
+          {link.label}
+        </Link>
+      ))}
 
 </div>
-
-
 );}
 

@@ -1,27 +1,18 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function AccountNavigation() {
+  const links = ["Signin", "Signup", "Profile"];
+  const { pathname } = useLocation();
+
   return (
     <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
 
-      <NavLink to="/Kanbas/Account/Signin" id="wd-account-navigation-signin"
-        className={({ isActive }) => 
-            isActive ? "nav-link list-group-item active border border-0" : "nav-link list-group-item text-danger border border-0"}>
-          Signin </NavLink>
-
-          <NavLink to="/Kanbas/Account/Signup" id="wd-account-navigation-signin"
-        className={({ isActive }) => 
-            isActive ? "nav-link list-group-item active border border-0" : "nav-link list-group-item text-danger border border-0"}>
-          Signup </NavLink>
-
-          <NavLink to="/Kanbas/Account/Profile" id="wd-account-navigation-signin"
-        className={({ isActive }) => 
-            isActive ? "nav-link list-group-item active border border-0" : "nav-link list-group-item text-danger border border-0"}>
-          Profile </NavLink>
-
+    {links.map((link) => (
+        <Link to={`/Kanbas/Account/${link}`} className={`
+              ${pathname.includes(link) ? "list-group-item active border border-0" : "list-group-item text-danger border border-0"}`}>
+          {link}
+        </Link>
+      ))}
 
     </div>
-
-
-
 );}
