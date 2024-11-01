@@ -12,5 +12,6 @@ const store = configureStore({
     todosReducer,
    },
 });
+
 export default store;
 
