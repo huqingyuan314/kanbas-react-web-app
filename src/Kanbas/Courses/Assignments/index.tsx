@@ -5,15 +5,26 @@ import AssignmentsControls from "./AssignmentsControls";
 import AssignmentTypeControlButtons from "./AssignmentTypeControlButtons";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
 import * as db from "../../Database";
+import GreenCheckmark from "../Modules/GreenCheckmark";
 
 export default function Assignments() {
   const { cid } = useParams();
   const assignments = db.assignments;
 
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  // Check if the user has FACULTY role
+  const isFaculty = currentUser?.role === "FACULTY";
+
+
     return (
 <div>
-<AssignmentsControls /><br /><br /><br /><br />
+
+  <AssignmentsControls />
+
+    <br /><br /><br /><br />
 
 
 
@@ -21,7 +32,7 @@ export default function Assignments() {
 
           <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
             <div className="wd-title p-3 ps-2 bg-secondary">
-              <BsGripVertical className="me-2 fs-3" />
+            {isFaculty && <BsGripVertical className="me-2 fs-3" /> }
               <RxTriangleDown className="me-2 fs-4"/>
                ASSIGNMENTS 
                <AssignmentTypeControlButtons />
@@ -36,25 +47,40 @@ export default function Assignments() {
 
 <div className="d-flex align-items-center justify-content-between">
   <div className="d-flex align-items-center">
-    <BsGripVertical className="me-2 fs-3" />
-    <FiEdit className="me-4 fs-5 text-success" />
-
+  {isFaculty && (
     <div>
-      <div>
+    <BsGripVertical className="me-2 fs-3" /> 
+    <FiEdit className="me-4 fs-5 text-success" /> 
+    </div> )}
+
+<div>
+    <div>
+      {isFaculty ? (
+        // If FACULTY, render the link to the Editor page
         <a className="wd-assignment-link text-black text-decoration-none"
-           href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
+          href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
           {assignment.title}
         </a>
-      </div>
-      <div className="text-muted small">
-        <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> {assignment.availableDate} at {assignment.availableTime} | <br />
-        <b>Due</b> {assignment.dueDate} at {assignment.dueTime} | {assignment.points} pts
-      </div>
+      ) : (
+        // If not FACULTY, render the assignment title as plain text
+        <span className="text-black">{assignment.title}</span>
+      )}
+    </div>
+    <div className="text-muted small">
+      <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> {assignment.availableDate} at {assignment.availableTime} | <br />
+      <b>Due</b> {assignment.dueDate} at {assignment.dueTime} | {assignment.points} pts
     </div>
   </div>
 
+  </div>
+
   <div className="d-flex align-items-center ms-auto">
-    <AssignmentControlButtons />
+    {/* Show AssignmentControlButtons only if user is FACULTY */}
+    {isFaculty && <AssignmentControlButtons /> }
+
+    {/* If user is not FACULTY, only show GreenCheckmark */}
+    {!isFaculty && (<div className="float-end"><GreenCheckmark /></div> )}
+
   </div>
 </div>
 

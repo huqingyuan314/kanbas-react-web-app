@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import * as db from "./Database";
 
 export default function Dashboard( 
@@ -12,6 +13,9 @@ export default function Dashboard(
     deleteCourse: (course: any) => void;
     updateCourse: () => void; })
    {
+
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments } = db;
 
   return (
     <div id="wd-dashboard">
@@ -35,7 +39,14 @@ export default function Dashboard(
       <div id="wd-dashboard-courses" className="row">
       <div className="row row-cols-1 row-cols-md-5 g-4">
 
-      {courses.map((course) => (
+      {courses
+          .filter((course) =>
+            enrollments.some(
+              (enrollment) =>
+                enrollment.user === currentUser._id &&
+                enrollment.course === course._id
+               ))
+      .map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden h-100 d-flex flex-column">
                 <Link to={`/Kanbas/Courses/${course._id}/Home`}

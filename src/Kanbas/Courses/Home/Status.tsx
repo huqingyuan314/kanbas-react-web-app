@@ -6,12 +6,21 @@ import { TfiTarget } from "react-icons/tfi";
 import { MdOutlineBarChart } from "react-icons/md";
 import { CiBullhorn } from "react-icons/ci";
 import { GoBell } from "react-icons/go";
+import { useSelector } from "react-redux";
 
 
 export default function CourseStatus() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+      // Check if the user has FACULTY role
+      const isFaculty = currentUser?.role === "FACULTY";
+
   return (
     <div id="wd-course-status" style={{ width: "300px" }} className="d-none d-lg-block">
-      <h2>Course Status</h2>
+    {/* Show CourseStatusFac only if user is FACULTY */}
+    {isFaculty && (
+      <div>
+<h2>Course Status</h2>
       <div className="d-flex">
         <div className="w-50 pe-1">
           <button className="btn btn-lg btn-secondary w-100 text-nowrap ">
@@ -30,16 +39,21 @@ export default function CourseStatus() {
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
         <LiaFileImportSolid className="me-2 fs-5" /> Import from Commons </button>
 
-      {/* Complete the rest of the buttons */}
 
         <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
         <TfiTarget className="me-2 fs-5" /> Choose Home Page </button>
 
-        <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
-        <MdOutlineBarChart className="me-2 fs-5" /> View Course Screen </button>
 
         <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
         <CiBullhorn className="me-2 fs-5" /> New Announcement </button>
+
+        </div>
+)}
+
+
+        <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
+        <MdOutlineBarChart className="me-2 fs-5" /> View Course Screen </button>
+
 
         <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
         <MdOutlineBarChart className="me-2 fs-5" /> New Analytics </button>

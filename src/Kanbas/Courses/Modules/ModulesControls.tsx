@@ -1,14 +1,23 @@
 import ModuleEditor from "./ModuleEditor";
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
+import { useSelector } from "react-redux";
 
 export default function ModulesControls(
   { moduleName, setModuleName, addModule }:
   { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }
 ) {
+
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  // Check if the user has FACULTY role
+  const isFaculty = currentUser?.role === "FACULTY";
+  
   return (
     <div id="wd-modules-controls" className="text-nowrap">
 
+{isFaculty && (
+  <div>
       <button id="wd-add-module-btn" className="btn btn-lg btn-danger me-1 float-end"
       data-bs-toggle="modal" data-bs-target="#wd-add-module-dialog">
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
@@ -47,9 +56,9 @@ export default function ModulesControls(
           </li>
         </ul>
       </div>
+      </div>
+)}
 
-      
-{/* Implement the View Progress and Collapse All buttons with IDs wd-view-progress and wd-collapse-all */}
 
   {/* View Progress Button */}
   <button id="wd-view-progress" className="btn btn-lg btn-secondary me-1 float-end">
@@ -68,4 +77,5 @@ export default function ModulesControls(
 
     </div>
 );}
+
 

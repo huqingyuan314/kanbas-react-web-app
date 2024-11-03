@@ -2,29 +2,37 @@ import React, { useState } from "react";
 import ModulesControls from "./ModulesControls";
 import LessonControlButtons from "./LessonControlButtons";
 import { BsGripVertical } from "react-icons/bs";
+import { RxTriangleDown } from "react-icons/rx";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router";
 import * as db from "../../Database";
 
-import { addModule, editModule, updateModule, deleteModule }
-  from "./reducer";
+import { addModule, editModule, updateModule, deleteModule } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
+import GreenCheckmark from "./GreenCheckmark";
 
 export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
 
   const { modules } = useSelector((state: any) => state.modulesReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
+
+    // Check if the user has FACULTY role
+    const isFaculty = currentUser?.role === "FACULTY";
 
     return (
       <div>
-
-      <ModulesControls　setModuleName={setModuleName} moduleName={moduleName} 
+      
+        <ModulesControls　
+        setModuleName={setModuleName} 
+        moduleName={moduleName} 
         addModule={() => {
         dispatch(addModule({ name: moduleName, course: cid }));
         setModuleName("");
       }} />
+
       <br /><br /><br /><br />
 
 <ul id="wd-modules" className="list-group rounded-0">
@@ -34,7 +42,8 @@ export default function Modules() {
           <li key={module._id} 
               className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
             <div className="wd-title p-3 ps-2 bg-secondary">
-              <BsGripVertical className="me-2 fs-3" />
+            {isFaculty && <BsGripVertical className="me-2 fs-3" /> }
+            <RxTriangleDown className="me-2 fs-4"/>
 
               {!module.editing && module.name}
               { module.editing && (
@@ -48,16 +57,31 @@ export default function Modules() {
               defaultValue={module.name}/>
             )}
 
+            {/* Show ModuleControlButtons only if user is FACULTY */}
+            {isFaculty && (
               <ModuleControlButtons moduleId={module._id}
                                     deleteModule={(moduleId) => {dispatch(deleteModule(moduleId));}}
                                     editModule={(moduleId) => dispatch(editModule(moduleId))} />
+            )}
+
+            {/* If user is not FACULTY, only show GreenCheckmark */}
+            {!isFaculty && (<div className="float-end"><GreenCheckmark /></div> )}
+            
             </div>
             {module.lessons && (
               <ul className="wd-lessons list-group rounded-0">
                 {module.lessons.map((lesson: any) => (
                   <li key={lesson._id}
                       className="wd-lesson list-group-item p-3 ps-1">
-                    <BsGripVertical className="me-2 fs-3" /> {lesson.name} <LessonControlButtons />
+                    {isFaculty && <BsGripVertical className="me-2 fs-3" /> } {lesson.name} 
+                    
+                    {/* Show LessonControlButtons only if user is FACULTY */}
+                    {isFaculty && <LessonControlButtons />}
+
+                    {/* If user is not FACULTY, only show GreenCheckmark */}
+                    {!isFaculty && (<div className="float-end"><GreenCheckmark /></div> )}
+
+
                   </li>
                 ))}
               </ul>
