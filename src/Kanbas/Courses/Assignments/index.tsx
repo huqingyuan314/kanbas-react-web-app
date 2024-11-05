@@ -53,23 +53,17 @@ export default function Assignments() {
     <FiEdit className="me-4 fs-5 text-success" /> 
     </div> )}
 
+
 <div>
-    <div>
-      {isFaculty ? (
-        // If FACULTY, render the link to the Editor page
         <a className="wd-assignment-link text-black text-decoration-none"
           href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
           {assignment.title}
         </a>
-      ) : (
-        // If not FACULTY, render the assignment title as plain text
-        <span className="text-black">{assignment.title}</span>
-      )}
-    </div>
-    <div className="text-muted small">
+        
+        <div className="text-muted small">
       <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> {assignment.availableDate} at {assignment.availableTime} | <br />
       <b>Due</b> {assignment.dueDate} at {assignment.dueTime} | {assignment.points} pts
-    </div>
+      </div>
   </div>
 
   </div>

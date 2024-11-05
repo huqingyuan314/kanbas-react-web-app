@@ -1,6 +1,7 @@
 import { FaPlus } from "react-icons/fa6";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function AssignmentsControls() {
 
@@ -9,6 +10,8 @@ export default function AssignmentsControls() {
   // Check if the user has FACULTY role
   const isFaculty = currentUser?.role === "FACULTY";
 
+  const navigate = useNavigate();
+  
   
   return (
     <div id="wd-assignments-controls" className="d-flex justify-content-end align-items-center text-nowrap">
@@ -30,13 +33,12 @@ export default function AssignmentsControls() {
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Group</button>
 
-      <button id="wd-add-assignment-btn" className="btn btn-lg btn-danger me-2 p-2">
+      <button id="wd-add-assignment-btn" className="btn btn-lg btn-danger me-2 p-2"
+      onClick={() => navigate("AssignmentEditor")}>
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Assignment</button>
         </div>
 }
-
-
 
 
     </div>
