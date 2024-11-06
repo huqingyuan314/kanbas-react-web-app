@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams, useNavigate } from "react-router";
 import * as db from "../../Database";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 
@@ -11,6 +11,7 @@ import { addAssignment, deleteAssignment, updateAssignment, editAssignment } fro
 
 export default function AssignmentEditor() {
   const { aid, cid } = useParams();
+  const location = useLocation();  // Get the current path
   const navigate = useNavigate(); // Use navigate hook
 
   const assignments = db.assignments;
@@ -217,14 +218,10 @@ export default function AssignmentEditor() {
             Cancel </Link>
 
             {isFaculty && (
-            // <Link id="wd-save-btn" type="submit"
-            // to={`/Kanbas/Courses/${cid}/Assignments`}
-            // className="btn btn-lg btn-danger">
-            // Save </Link>
             <button
             id="wd-save-btn"
             type="button"
-            onClick={addAssignment}
+            onClick={location.pathname.includes("AssignmentEditor") ? handleSave : updateAssignment}
             className="btn btn-lg btn-danger" >
             Save
           </button>

@@ -66,7 +66,9 @@ export default function Assignments() {
 
 <div>
         <a className="wd-assignment-link text-black text-decoration-none"
-          href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
+          href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+          onClick={() => editAssignment(assignment._id)}
+          >
           {assignment.title}
         </a>
 
@@ -84,11 +86,6 @@ export default function Assignments() {
     <AssignmentControlButtons 
     deleteAssignment= {() => { dispatch(deleteAssignment(assignment._id)) }} /> }
 
-{/* {isFaculty && (
-  <AssignmentControlButtons 
-    deleteAssignment={(assignmentId: string) => { dispatch(deleteAssignment(assignmentId)); }}
-  />
-)} */}
 
     {/* If user is not FACULTY, only show GreenCheckmark */}
     {!isFaculty && (<div className="float-end"><GreenCheckmark /></div> )}
