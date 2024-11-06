@@ -11,7 +11,8 @@ import GreenCheckmark from "../Modules/GreenCheckmark";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  // const assignments = db.assignments;
+  const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
@@ -59,7 +60,7 @@ export default function Assignments() {
           href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
           {assignment.title}
         </a>
-        
+
         <div className="text-muted small">
       <span className="text-danger">Multiple Modules</span> | <b>Not available until</b> {assignment.availableDate} at {assignment.availableTime} | <br />
       <b>Due</b> {assignment.dueDate} at {assignment.dueTime} | {assignment.points} pts
