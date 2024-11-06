@@ -80,10 +80,15 @@ export default function Assignments() {
 
   <div className="d-flex align-items-center ms-auto">
     {/* Show AssignmentControlButtons only if user is FACULTY */}
-    {isFaculty && <AssignmentControlButtons 
-                    assignmentId={assignment._id}
-                    deleteAssignment={(moduleId) => {dispatch(deleteAssignment(moduleId));}}
-                                     /> }
+    {isFaculty && 
+    <AssignmentControlButtons 
+    deleteAssignment= {() => { dispatch(deleteAssignment(assignment._id)) }} /> }
+
+{/* {isFaculty && (
+  <AssignmentControlButtons 
+    deleteAssignment={(assignmentId: string) => { dispatch(deleteAssignment(assignmentId)); }}
+  />
+)} */}
 
     {/* If user is not FACULTY, only show GreenCheckmark */}
     {!isFaculty && (<div className="float-end"><GreenCheckmark /></div> )}
