@@ -9,15 +9,24 @@ import { useSelector, useDispatch } from "react-redux";
 import * as db from "../../Database";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 
+import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
+
 export default function Assignments() {
   const { cid } = useParams();
+
+
+
   // const assignments = db.assignments;
   const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+  const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   // Check if the user has FACULTY role
   const isFaculty = currentUser?.role === "FACULTY";
+
+
+
 
 
     return (
@@ -71,7 +80,10 @@ export default function Assignments() {
 
   <div className="d-flex align-items-center ms-auto">
     {/* Show AssignmentControlButtons only if user is FACULTY */}
-    {isFaculty && <AssignmentControlButtons /> }
+    {isFaculty && <AssignmentControlButtons 
+                    assignmentId={assignment._id}
+                    deleteAssignment={(moduleId) => {dispatch(deleteAssignment(moduleId));}}
+                                     /> }
 
     {/* If user is not FACULTY, only show GreenCheckmark */}
     {!isFaculty && (<div className="float-end"><GreenCheckmark /></div> )}

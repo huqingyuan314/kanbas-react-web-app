@@ -224,7 +224,7 @@ export default function AssignmentEditor() {
             <button
             id="wd-save-btn"
             type="button"
-            onClick={handleSave}
+            onClick={addAssignment}
             className="btn btn-lg btn-danger" >
             Save
           </button>
