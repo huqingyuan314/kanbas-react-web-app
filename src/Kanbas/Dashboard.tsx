@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { enrollInCourse, unenrollFromCourse } from "./Enrollments/reducer";
-import * as db from "./Database";
+// import * as db from "./Database";
 
 export default function Dashboard({
   courses,
@@ -119,13 +119,14 @@ export default function Dashboard({
         <div className="row row-cols-1 row-cols-md-5 g-4">
           {(showAllCourses
             ? courses
-            : courses.filter((course) =>
-                enrollments.some(
-                  (enrollment: { user: any; course: any }) =>
-                    enrollment.user === currentUser._id &&
-                    enrollment.course === course._id
-                )
-              )
+            : courses
+            // .filter((course) =>
+            //     enrollments.some(
+            //       (enrollment: { user: any; course: any }) =>
+            //         enrollment.user === currentUser._id &&
+            //         enrollment.course === course._id
+            //     )
+            //   )
           ).map((course) => (
             <div
               key={course._id}
