@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { enrollInCourse, unenrollFromCourse } from "./Enrollments/reducer";
-// import * as db from "./Database";
+import { enrollInCourse, setEnrollments, unenrollFromCourse } from "./Enrollments/reducer";
+import { enrollUserInCourse as apiEnroll, unenrollUserFromCourse as apiUnenroll } from "./Enrollments/client";
+import axios from "axios";
 
 export default function Dashboard({
   courses,
@@ -20,7 +21,6 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  // const { enrollments } = db;
 
   const enrollments = useSelector(
     (state: any) => state.enrollmentsReducer.enrollments
@@ -44,15 +44,68 @@ export default function Dashboard({
         enrollment.user === currentUser._id && enrollment.course === courseId
     );
   };
+  
 
-  // Handle enrollment actions
-  const handleEnrollment = (courseId: string) => {
-    if (isEnrolled(courseId)) {
-      dispatch(unenrollFromCourse({ user: currentUser._id, course: courseId }));
-    } else {
-      dispatch(enrollInCourse({ user: currentUser._id, course: courseId }));
+  // Handle enrollment actions when student click "enroll/unenroll"
+
+  // const handleEnrollment = async (courseId: string) => {
+  //   if (isEnrolled(courseId)) {
+  //     await apiUnenroll(currentUser._id, courseId);
+  //     dispatch(unenrollFromCourse({ user: currentUser._id, course: courseId }));
+  //   } else {
+  //     await apiEnroll(currentUser._id, courseId);
+  //     dispatch(enrollInCourse({
+  //       user: currentUser._id, course: courseId,
+  //       _id: new Date().getTime(),
+  //     }));
+  //   }
+  // };
+  
+  const handleEnrollment = async (courseId: string) => {
+    try {
+      if (isEnrolled(courseId)) {
+        await apiUnenroll(currentUser._id, courseId);
+        dispatch(
+          unenrollFromCourse({
+            user: currentUser._id,
+            course: courseId,
+          })
+        );
+      } else {
+        const enrollment = await apiEnroll(currentUser._id, courseId);
+        dispatch(
+          enrollInCourse({
+            _id: enrollment._id, // Use the server-generated ID
+            user: enrollment.user,
+            course: enrollment.course,
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Enrollment action failed:", error);
     }
   };
+
+
+  const Dashboard = () => {
+    const dispatch = useDispatch();
+  }
+  
+    const fetchEnrollments = async () => {
+      try {
+        const response = await axios.get("/api/enrollments");
+        dispatch(setEnrollments(response.data));
+      } catch (error) {
+        console.error("Failed to fetch enrollments:", error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchEnrollments();
+    }, []);
+
+
+
 
   // Handle navigation based on enrollment status
   const handleNavigation = (courseId: string) => {
