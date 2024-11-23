@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
 import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 
 export default function AssignmentEditor() {
@@ -23,20 +24,20 @@ export default function AssignmentEditor() {
   const [availableDate, setAvailableDate] = useState("");
   const [availableUntilDate, setAvailableUntilDate] = useState("");
 
-  // const assignments = db.assignments;
-  const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+  const assignments = db.assignments;
+  // const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
   const assignment = assignments.find((assignment: any) => assignment._id === aid);
 
-  useEffect(() => {
-    if (assignment) {
-      setTitle(assignment.title);
-      setDescription(assignment.description);
-      setPoints(assignment.points);
-      setDueDate(assignment.dueDate);
-      setAvailableDate(assignment.availableDate);
-      setAvailableUntilDate(assignment.availableUntilDate);
-    }
-  }, [assignment]);  // Dependencies array includes assignment to run effect when it changes
+  // useEffect(() => {
+  //   if (assignment) {
+  //     setTitle(assignment.title);
+  //     setDescription(assignment.description);
+  //     setPoints(assignment.points);
+  //     setDueDate(assignment.dueDate);
+  //     setAvailableDate(assignment.availableDate);
+  //     setAvailableUntilDate(assignment.availableUntilDate);
+  //   }
+  // }, [assignment]);  // Dependencies array includes assignment to run effect when it changes
   
 
 
@@ -48,24 +49,34 @@ export default function AssignmentEditor() {
   // };
 
   const createAssignmentForCourse = async () => {
-    if (!cid || !assignmentName) return;
-    const newAssignment = {
-      title,
-      description,
-      points,
-      dueDate,
-      availableDate,
-      availableUntilDate,
-      course: cid
-    };
-    try {
-      const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
-      dispatch(addAssignment(assignment));
-      navigate(`/Kanbas/Courses/${cid}/Assignments`);
-    } catch (error) {
-      console.error('Error creating assignment:', error);
-    }
+    if (!cid) return;
+    const newAssignment = { name: assignmentName, course: cid };
+    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+    dispatch(addAssignment(assignment));
   };
+
+  const saveAssignment = async (assignment: any) => {
+    await assignmentsClient.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  };
+
+
+  // Save button handler
+  const handleSave = () => {
+      //   const newAssignment = {
+      //         _id: `a-${Date.now()}`,  // Generate a unique ID
+      //         title,
+      //         description,
+      //         points,
+      //         dueDate,
+      //         availableDate,
+      //         availableUntilDate,
+      //         // Other fields as necessary
+      //       };
+      // dispatch(addAssignment(newAssignment));
+      createAssignmentForCourse();
+      navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    };
   
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -250,7 +261,7 @@ export default function AssignmentEditor() {
             <button
             id="wd-save-btn"
             type="button"
-            onClick={location.pathname.includes("AssignmentEditor") ? createAssignmentForCourse : updateAssignment}
+            onClick={location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment}
             className="btn btn-lg btn-danger" >
             Save
           </button>
