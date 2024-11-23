@@ -38,12 +38,6 @@ export default function Assignments() {
     fetchAssignments();
   }, []);
 
-  const createAssignmentForCourse = async () => {
-    if (!cid) return;
-    const newAssignment = { name: assignmentName, course: cid };
-    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
-    dispatch(addAssignment(assignment));
-  };
 
   const removeAssignment = async (assignmentId: string) => {
     await assignmentsClient.deleteAssignment(assignmentId);
@@ -117,7 +111,7 @@ export default function Assignments() {
                       {/* Show AssignmentControlButtons only if user is FACULTY */}
                       {isFaculty && (
                         <AssignmentControlButtons
-                          deleteAssignment={(assignmentId) => removeAssignment(assignmentId)} assignmentId={""}                        />
+                          deleteAssignment={(assignmentId) => removeAssignment(assignmentId)} assignmentId={`${assignment._id}`}                        />
                       )}
 
                       {/* If user is not FACULTY, only show GreenCheckmark */}
