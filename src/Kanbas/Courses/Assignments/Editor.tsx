@@ -12,7 +12,7 @@ import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { aid, cid } = useParams();
-  const [assignmentName, setAssignmentName] = useState("");
+
   const location = useLocation();  // Get the current path
   const navigate = useNavigate(); // Use navigate hook
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ export default function AssignmentEditor() {
 
   const createAssignmentForCourse = async () => {
     if (!cid) return;
-    const newAssignment = { name: assignmentName, course: cid };
+    const newAssignment = { name: title, course: cid };
     const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
     dispatch(addAssignment(assignment));
   };

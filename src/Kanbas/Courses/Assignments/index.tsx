@@ -47,8 +47,6 @@ export default function Assignments() {
 
 
 
-
-
   // Check if the user has FACULTY role
   const isFaculty = currentUser?.role === "FACULTY";
 
