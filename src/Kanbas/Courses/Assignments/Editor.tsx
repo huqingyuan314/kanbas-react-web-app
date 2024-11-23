@@ -59,7 +59,7 @@ export default function AssignmentEditor() {
     await assignmentsClient.updateAssignment(assignment);
     dispatch(updateAssignment(assignment));
 
-    navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    // navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
 
 
@@ -77,7 +77,7 @@ export default function AssignmentEditor() {
       //       };
       // dispatch(addAssignment(newAssignment));
       createAssignmentForCourse();
-      navigate(`/Kanbas/Courses/${cid}/Assignments`);
+      // navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
   
 
@@ -263,7 +263,9 @@ export default function AssignmentEditor() {
             <button
             id="wd-save-btn"
             type="button"
-            onClick={location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment}
+            onClick={ () => {location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment;
+              navigate(`/Kanbas/Courses/${cid}/Assignments`);}
+            }
             className="btn btn-lg btn-danger" >
             Save
           </button>
