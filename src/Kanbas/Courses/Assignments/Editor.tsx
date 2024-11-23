@@ -58,6 +58,8 @@ export default function AssignmentEditor() {
   const saveAssignment = async (assignment: any) => {
     await assignmentsClient.updateAssignment(assignment);
     dispatch(updateAssignment(assignment));
+
+    navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
 
 
