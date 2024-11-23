@@ -8,13 +8,15 @@ import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import * as db from "../../Database";
 import GreenCheckmark from "../Modules/GreenCheckmark";
-
 import {
   addAssignment,
   deleteAssignment,
   updateAssignment,
   editAssignment,
+  setAssignments
 } from "./reducer";
+import * as coursesClient from "../client";
+import { useEffect } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -23,9 +25,19 @@ export default function Assignments() {
   const assignments = useSelector(
     (state: any) => state.assignmentsReducer.assignments
   );
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const fetchAssignments = async () => {
+    const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+
+
 
   // Check if the user has FACULTY role
   const isFaculty = currentUser?.role === "FACULTY";
@@ -50,7 +62,7 @@ export default function Assignments() {
 
           <ul className="wd-lessons list-group rounded-0">
             {assignments
-              .filter((assignment: any) => assignment.course === cid)
+              // .filter((assignment: any) => assignment.course === cid)
               .map((assignment: any) => (
                 <li
                   key={assignment._id}
