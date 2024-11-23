@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import * as db from "../../Database";
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
 import * as coursesClient from "../client";
@@ -14,48 +14,68 @@ export default function AssignmentEditor() {
   const [assignmentName, setAssignmentName] = useState("");
   const location = useLocation();  // Get the current path
   const navigate = useNavigate(); // Use navigate hook
-
-  const assignments = db.assignments;
-  const assignment = assignments.find((assignment) => assignment._id === aid);
-  
-  // const { assignments2 } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [points, setPoints] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [availableDate, setAvailableDate] = useState("");
+  const [availableUntilDate, setAvailableUntilDate] = useState("");
+
+  // const assignments = db.assignments;
+  const assignments = useSelector((state: any) => state.assignmentsReducer.assignments);
+  const assignment = assignments.find((assignment: any) => assignment._id === aid);
+
+  useEffect(() => {
+    if (assignment) {
+      setTitle(assignment.title);
+      setDescription(assignment.description);
+      setPoints(assignment.points);
+      setDueDate(assignment.dueDate);
+      setAvailableDate(assignment.availableDate);
+      setAvailableUntilDate(assignment.availableUntilDate);
+    }
+  }, [assignment]);  // Dependencies array includes assignment to run effect when it changes
+  
+
+
+  // const createAssignmentForCourse = async () => {
+  //   if (!cid) return;
+  //   const newAssignment = { name: assignmentName, course: cid };
+  //   const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+  //   dispatch(addAssignment(assignment));
+  // };
+
   const createAssignmentForCourse = async () => {
-    if (!cid) return;
-    const newAssignment = { name: assignmentName, course: cid };
-    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
-    dispatch(addAssignment(assignment));
+    if (!cid || !assignmentName) return;
+    const newAssignment = {
+      title,
+      description,
+      points,
+      dueDate,
+      availableDate,
+      availableUntilDate,
+      course: cid
+    };
+    try {
+      const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+      dispatch(addAssignment(assignment));
+      navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error('Error creating assignment:', error);
+    }
   };
+  
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
     // Check if the user has FACULTY role
     const isFaculty = currentUser?.role === "FACULTY";
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [points, setPoints] = useState("");
-    const [dueDate, setDueDate] = useState("");
-    const [availableDate, setAvailableDate] = useState("");
-    const [availableUntilDate, setAvailableUntilDate] = useState("");
-  
-  // Save button handler
-  const handleSave = () => {
-  //   const newAssignment = {
-  //         _id: `a-${Date.now()}`,  // Generate a unique ID
-  //         title,
-  //         description,
-  //         points,
-  //         dueDate,
-  //         availableDate,
-  //         availableUntilDate,
-  //         // Other fields as necessary
-  //       };
 
-  // dispatch(addAssignment(newAssignment));
-  createAssignmentForCourse();
-  navigate(`/Kanbas/Courses/${cid}/Assignments`);
-};
+
+    
+  
 
 
     return (
@@ -230,7 +250,7 @@ export default function AssignmentEditor() {
             <button
             id="wd-save-btn"
             type="button"
-            onClick={location.pathname.includes("AssignmentEditor") ? handleSave : updateAssignment}
+            onClick={location.pathname.includes("AssignmentEditor") ? createAssignmentForCourse : updateAssignment}
             className="btn btn-lg btn-danger" >
             Save
           </button>
