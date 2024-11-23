@@ -95,7 +95,7 @@ export default function AssignmentEditor() {
         <div className="row mb-4">
           <div className="col">
             <h3>Assignment Name</h3>
-            <input id="wd-name" value={assignment && assignment.title} 
+            <input id="wd-name" defaultValue={assignment && assignment.title} 
             onChange={(e) => setTitle(e.target.value)}
             className="form-control" 
             readOnly={!isFaculty} />
@@ -104,7 +104,7 @@ export default function AssignmentEditor() {
 
         <div className="row mb-4">
           <div className="col">
-            <textarea id="wd-description" value={assignment && assignment.description} 
+            <textarea id="wd-description" defaultValue={assignment && assignment.description} 
             onChange={(e) => setDescription(e.target.value)}
             className="form-control" rows={10}
             readOnly={!isFaculty} >
@@ -119,7 +119,7 @@ export default function AssignmentEditor() {
             <label htmlFor="wd-points">Points</label>
           </div>
           <div className="col-8 d-flex justify-content-end align-items-center">
-            <input id="wd-points" value={assignment && assignment.points} 
+            <input id="wd-points" defaultValue={assignment && assignment.points} 
             onChange={(e) => setPoints(e.target.value)}
             className="form-control" 
             readOnly={!isFaculty} />
