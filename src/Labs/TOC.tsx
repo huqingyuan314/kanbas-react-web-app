@@ -89,7 +89,7 @@ export default function TOC() {
       <li className="nav-item">
         <a
           id="wd-k"
-          href="https://kanbas-node-server-app-hqim.onrender.com"
+          href="https://kanbas-node-server-app-fgyx.onrender.com"
           className="nav-link text-success"
         >
           Server

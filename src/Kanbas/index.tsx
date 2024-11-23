@@ -57,6 +57,9 @@ export default function Kanbas() {
   };
 
 
+  
+
+
   return (
     <Session>
     <div id="wd-kanbas">
