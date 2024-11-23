@@ -32,9 +32,13 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
 };
 
 export const findAssignmentsForCourse = async (courseId: string) => {
-  const response = await axios
-    .get(`${COURSES_API}/${courseId}/assignments`);
-  return response.data;
+  try {
+    const response = await axios.get(`${COURSES_API}/${courseId}/assignments`);
+    return response.data;
+} catch (error) {
+    console.error('Failed to fetch assignments:', error);
+    return [];
+}
 };
 
 export const createAssignmentForCourse = async (courseId: string, assignment: any) => {

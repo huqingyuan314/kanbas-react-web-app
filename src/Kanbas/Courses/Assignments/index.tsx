@@ -16,10 +16,11 @@ import {
   setAssignments
 } from "./reducer";
 import * as coursesClient from "../client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
+  const [assignmentName, setAssignmentName] = useState("");
 
   // const assignments = db.assignments;
   const assignments = useSelector(
@@ -35,6 +36,14 @@ export default function Assignments() {
   useEffect(() => {
     fetchAssignments();
   }, []);
+
+  const createAssignmentForCourse = async () => {
+    if (!cid) return;
+    const newAssignment = { name: assignmentName, course: cid };
+    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+    dispatch(addAssignment(assignment));
+  };
+
 
 
 

@@ -6,11 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 
 import { addAssignment, deleteAssignment, updateAssignment, editAssignment } from "./reducer";
-
+import * as coursesClient from "../client";
 
 
 export default function AssignmentEditor() {
   const { aid, cid } = useParams();
+  const [assignmentName, setAssignmentName] = useState("");
   const location = useLocation();  // Get the current path
   const navigate = useNavigate(); // Use navigate hook
 
@@ -19,6 +20,13 @@ export default function AssignmentEditor() {
   
   // const { assignments2 } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
+
+  const createAssignmentForCourse = async () => {
+    if (!cid) return;
+    const newAssignment = { name: assignmentName, course: cid };
+    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+    dispatch(addAssignment(assignment));
+  };
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
     // Check if the user has FACULTY role
@@ -33,18 +41,19 @@ export default function AssignmentEditor() {
   
   // Save button handler
   const handleSave = () => {
-    const newAssignment = {
-          _id: `a-${Date.now()}`,  // Generate a unique ID
-          title,
-          description,
-          points,
-          dueDate,
-          availableDate,
-          availableUntilDate,
-          // Other fields as necessary
-        };
+  //   const newAssignment = {
+  //         _id: `a-${Date.now()}`,  // Generate a unique ID
+  //         title,
+  //         description,
+  //         points,
+  //         dueDate,
+  //         availableDate,
+  //         availableUntilDate,
+  //         // Other fields as necessary
+  //       };
 
-  dispatch(addAssignment(newAssignment));
+  // dispatch(addAssignment(newAssignment));
+  createAssignmentForCourse();
   navigate(`/Kanbas/Courses/${cid}/Assignments`);
 };
 
