@@ -59,7 +59,7 @@ export default function AssignmentEditor() {
     await assignmentsClient.updateAssignment(assignment);
     dispatch(updateAssignment(assignment));
 
-    // navigate(`/Kanbas/Courses/${cid}/Assignments`);
+    navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
 
 
@@ -77,7 +77,7 @@ export default function AssignmentEditor() {
       //       };
       // dispatch(addAssignment(newAssignment));
       createAssignmentForCourse();
-      // navigate(`/Kanbas/Courses/${cid}/Assignments`);
+      navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
   
 
@@ -222,7 +222,7 @@ export default function AssignmentEditor() {
     readOnly={!isFaculty} />
 
     <label htmlFor="wd-due-date" className="col-form-label">Due</label>
-    <input type="date" id="wd-due-date" value={assignment && assignment.dueDate} 
+    <input type="date" id="wd-due-date" defaultValue={assignment && assignment.dueDate} 
             onChange={(e) => setDueDate(e.target.value)}
             className="form-control" 
     readOnly={!isFaculty} />
@@ -231,7 +231,7 @@ export default function AssignmentEditor() {
     <div className="row">
       <div className="col">
         <label htmlFor="wd-available-from" className="col-form-label">Available from</label>
-        <input type="date" id="wd-available-from" value={assignment && assignment.availableDate} 
+        <input type="date" id="wd-available-from" defaultValue={assignment && assignment.availableDate} 
         onChange={(e) => setAvailableDate(e.target.value)}
         className="form-control" 
         readOnly={!isFaculty} />
@@ -263,9 +263,14 @@ export default function AssignmentEditor() {
             <button
             id="wd-save-btn"
             type="button"
-            onClick={ () => {location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment;
-              navigate(`/Kanbas/Courses/${cid}/Assignments`);}
-            }
+            onClick={() => {
+              if (location.pathname.includes("AssignmentEditor")) {
+                handleSave();
+              } else {
+                saveAssignment;
+              }
+            }}
+            // {location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment}
             className="btn btn-lg btn-danger" >
             Save
           </button>
