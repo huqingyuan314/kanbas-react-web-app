@@ -263,14 +263,7 @@ export default function AssignmentEditor() {
             <button
             id="wd-save-btn"
             type="button"
-            onClick={() => {
-              if (location.pathname.includes("AssignmentEditor")) {
-                handleSave();
-              } else {
-                saveAssignment;
-              }
-            }}
-            // {location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment}
+            onClick={location.pathname.includes("AssignmentEditor") ? handleSave : saveAssignment}
             className="btn btn-lg btn-danger" >
             Save
           </button>
