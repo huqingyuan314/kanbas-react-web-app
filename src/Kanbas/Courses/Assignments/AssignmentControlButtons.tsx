@@ -3,11 +3,12 @@ import DeleteDialog from "./DeleteDialog";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
+import { MdAssignmentInd } from "react-icons/md";
 
 
 export default function AssignmentControlButtons(
-  {  deleteAssignment }:
-  { deleteAssignment: () => void; }
+  {  assignmentId, deleteAssignment }:
+  { assignmentId: string; deleteAssignment: (assignmentId: string) => void; }
 ) {
     return (
       <div className="float-end">
@@ -18,7 +19,8 @@ export default function AssignmentControlButtons(
       <IoEllipsisVertical className="fs-4" />
 
       <DeleteDialog dialogTitle="Are you sure to delete the assignment?"
-                    deleteAssignment={deleteAssignment} />
+                    onDeleteConfirm={() => deleteAssignment(assignmentId)}
+                     />
 
     </div>
   );}

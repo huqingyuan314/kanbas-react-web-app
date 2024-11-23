@@ -16,6 +16,7 @@ import {
   setAssignments
 } from "./reducer";
 import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 import { useEffect, useState } from "react";
 
 export default function Assignments() {
@@ -43,6 +44,12 @@ export default function Assignments() {
     const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
     dispatch(addAssignment(assignment));
   };
+
+  const removeAssignment = async (assignmentId: string) => {
+    await assignmentsClient.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+
 
 
 
@@ -110,10 +117,7 @@ export default function Assignments() {
                       {/* Show AssignmentControlButtons only if user is FACULTY */}
                       {isFaculty && (
                         <AssignmentControlButtons
-                          deleteAssignment={() => {
-                            dispatch(deleteAssignment(assignment._id));
-                          }}
-                        />
+                          deleteAssignment={(assignmentId) => removeAssignment(assignmentId)} assignmentId={""}                        />
                       )}
 
                       {/* If user is not FACULTY, only show GreenCheckmark */}
