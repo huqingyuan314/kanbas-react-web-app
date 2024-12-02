@@ -11,4 +11,3 @@ export const updateModule = async (module: any) => {
     const { data } = await axios.put(`${MODULES_API}/${module._id}`, module);
     return data;
   };
-  
