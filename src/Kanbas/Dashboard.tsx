@@ -22,7 +22,10 @@ export default function Dashboard({
   setEnrolling: (enrolling: boolean) => void;
   updateEnrollment: (courseId: string, enrolled: boolean) => void
 }) {
+
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  // Check roles and protect routes
+  const isFacultyOrAdmin = currentUser?.role === "FACULTY" || currentUser?.role === "ADMIN";
 
   const getImage = (_id: string): string => {
     const images = [
@@ -40,7 +43,6 @@ export default function Dashboard({
   };
 
 
-
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard
@@ -48,6 +50,9 @@ export default function Dashboard({
           {enrolling ? "My Courses" : "All Courses"}
         </button>
         </h1> <hr />
+
+    {isFacultyOrAdmin && (
+       <div id="wd-dashboard-faculty">
       <h5>
         New Course
         <button
@@ -77,6 +82,9 @@ export default function Dashboard({
         onChange={(e) => setCourse({ ...course, description: e.target.value })}
       />
       <hr />
+      </div> 
+    )}
+
       <hr />
       <h2 id="wd-dashboard-published">
         Published Courses ({courses.length})
@@ -126,6 +134,8 @@ export default function Dashboard({
 
                     <div className="">
                     <button className="btn btn-primary mt-auto"> Go </button>
+                    
+                    {isFacultyOrAdmin && (
                     <button
                       onClick={(event) => {
                         event.preventDefault();
@@ -136,6 +146,8 @@ export default function Dashboard({
                     >
                       Delete
                     </button>
+                    )}
+                    {isFacultyOrAdmin && (
                     <button
                       id="wd-edit-course-click"
                       onClick={(event) => {
@@ -146,6 +158,7 @@ export default function Dashboard({
                     >
                       Edit
                     </button>
+                    )}
                     </div>
 
                   </div>
