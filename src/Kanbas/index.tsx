@@ -22,13 +22,17 @@ export default function Kanbas() {
   const [enrolling, setEnrolling] = useState<boolean>(false);
   const findCoursesForUser = async () => {
     try {
+      if (!currentUser || !currentUser._id) {
+        console.error("currentUser is undefined or missing _id");
+        return;
+      }
       const courses = await userClient.findCoursesForUser(currentUser._id);
       setCourses(courses);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching courses:", error);
     }
   };
-
+  
   const updateEnrollment = async (courseId: string, enrolled: boolean) => {
     if (enrolled) {
       await userClient.enrollIntoCourse(currentUser._id, courseId);
@@ -66,6 +70,11 @@ export default function Kanbas() {
   };
 
   useEffect(() => {
+    if (!currentUser || !currentUser._id) {
+      console.error("currentUser is undefined or missing _id");
+      return;
+    }
+
     if (enrolling) {
       fetchCourses();
     } else {
