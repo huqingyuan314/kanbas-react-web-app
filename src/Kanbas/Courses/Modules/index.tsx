@@ -5,7 +5,7 @@ import { BsGripVertical } from "react-icons/bs";
 import { RxTriangleDown } from "react-icons/rx";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router";
-import * as db from "../../Database";
+// import * as db from "../../Database";
 
 import { addModule, editModule, updateModule, deleteModule, setModules } from "./reducer";
 import * as coursesClient from "../client";

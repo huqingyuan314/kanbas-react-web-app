@@ -10,6 +10,7 @@ import PeopleTable from "./People/Table";
 import { useEffect, useState } from "react";
 import * as client from "../Courses/client";
 import PeopleDetails from "./People/Details";
+import Quizzes from "./Quizzes";
 
 
 export default function Courses({ courses }: { courses: any[]; }) {
