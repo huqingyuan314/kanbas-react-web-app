@@ -28,6 +28,11 @@ export default function Signin() {
              className="form-control mb-2"/>
       <input defaultValue={credentials.password}
              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  signin();
+                }
+              }}
              id="wd-password"
              placeholder="password" type="password"
              className="form-control mb-2"/>

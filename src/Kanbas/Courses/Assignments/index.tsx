@@ -19,9 +19,10 @@ import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
 import { useEffect, useState } from "react";
 
+
 export default function Assignments() {
   const { cid } = useParams();
-  const [assignmentName, setAssignmentName] = useState("");
+  const [assignmentTitle, setAssignmentTitle] = useState("");
 
   // const assignments = db.assignments;
   const assignments = useSelector(
@@ -81,7 +82,10 @@ export default function Assignments() {
                       {isFaculty && (
                         <div>
                           <BsGripVertical className="me-2 fs-3" />
-                          <FiEdit className="me-4 fs-5 text-success" />
+                          <a href={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
+                          <FiEdit onClick={() => editAssignment(assignment._id)}
+                          className="me-4 fs-5 text-success" />
+                          </a>
                         </div>
                       )}
 
@@ -98,8 +102,8 @@ export default function Assignments() {
                           <span className="text-danger">Multiple Modules</span>{" "}
                           | <b>Not available until</b>{" "}
                           {assignment.availableDate} at{" "}
-                          {assignment.availableTime} | <br />
-                          <b>Due</b> {assignment.dueDate} at{" "}
+                          12:00am | <br />
+                          <b>Due</b> {assignment.dueDate} at{" "} 11:59pm
                           {assignment.dueTime} | {assignment.points} pts
                         </div>
                       </div>
