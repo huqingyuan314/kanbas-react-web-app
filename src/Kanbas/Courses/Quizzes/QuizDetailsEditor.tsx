@@ -23,6 +23,7 @@ export default function QuizDetailsEditor() {
   const [dueDate, setDueDate] = useState("");
   const [availableDate, setAvailableDate] = useState("");
   const [availableUntilDate, setAvailableUntilDate] = useState("");
+  const [published, setPublished] = useState("");
 
   const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
   const quiz = quizzes.find((quiz: any) => quiz._id === qid);
@@ -36,6 +37,8 @@ export default function QuizDetailsEditor() {
       setDueDate(quiz.dueDate ? quiz.dueDate.split("T")[0] : ""); // Format to YYYY-MM-DD
       setAvailableDate(quiz.availableDate ? quiz.availableDate.split("T")[0] : "");
       setAvailableUntilDate(quiz.availableUntilDate ? quiz.availableUntilDate.split("T")[0] : "");
+
+      setPublished(quiz.published);
     }
   }, [quiz]);  // Dependencies array includes quiz to run effect when it changes
 
@@ -50,6 +53,7 @@ export default function QuizDetailsEditor() {
       dueDate: dueDate,
       availableDate: availableDate,
       availableUntilDate: availableUntilDate,
+      published: published,
       course: cid 
     };
     const quiz = await coursesClient.createQuizForCourse(cid, newQuiz);
@@ -61,7 +65,7 @@ export default function QuizDetailsEditor() {
       try {
         await quizzesClient.updateQuiz(updatedQuiz); // API call
         dispatch(updateQuiz(updatedQuiz)); // Update Redux state
-        navigate(`/Kanbas/Courses/${cid}/Quizzes`); // Navigate back to quizzes
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`); // Navigate back to quizzes
       } catch (error) {
         console.error("Error updating quiz:", error);
       }
@@ -118,10 +122,10 @@ export default function QuizDetailsEditor() {
           <div className="col-8 d-flex justify-content-end align-items-center">
             <select id="wd-quiz-type" className="form-control"
             disabled={!isFaculty} >
-              <option value="PERCENTAGE" selected>Graded Quiz</option>
-              <option value="SCORE">Practice Quiz</option>
-              <option value="LETTER">Graded Survey</option>
-              <option value="PASS">Ungraded Survey</option>
+              <option value="GRADED-QUIZ" selected>Graded Quiz</option>
+              <option value="PRACTICE-QUIZ">Practice Quiz</option>
+              <option value="GRADED-SURVEY">Graded Survey</option>
+              <option value="UNGRADED-SURVEY">Ungraded Survey</option>
             </select>
           </div>
           </div>
@@ -236,10 +240,9 @@ export default function QuizDetailsEditor() {
 
         <Link id="wd-quiz-cancel-btn"
             to={`/Kanbas/Courses/${cid}/Quizzes`}
-            className="btn btn-lg btn-secondary me-2">
+            className="btn btn-lg btn-secondary me-3">
             Cancel </Link>
 
-            {isFaculty && (
           <button
           id="wd-quiz-save-btn"
           type="button"
@@ -254,13 +257,36 @@ export default function QuizDetailsEditor() {
                   dueDate,
                   availableDate,
                   availableUntilDate,
+                //   published,
                 })
           }
-          className="btn btn-lg btn-danger"
+          className="btn btn-lg btn-danger me-3"
         >
           Save
         </button>
-             )}
+
+        <button
+          id="wd-quiz-saveAndPublish-btn"
+          type="button"
+          onClick={() =>
+            location.pathname.includes("QuizDatailsEditor")
+              ? createQuiz()
+              : editAndUpdateQuiz({
+                  _id: quiz._id,
+                  title,
+                  description,
+                  points,
+                  dueDate,
+                  availableDate,
+                  availableUntilDate,
+                //   published,
+                })
+          }
+          className="btn btn-lg btn-primary"
+        >
+          Save and Publish
+        </button>
+          
 
         </div>
       </div>

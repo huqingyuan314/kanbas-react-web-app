@@ -27,6 +27,7 @@ export default function Quizzes() {
   const quizzes = useSelector(
     (state: any) => state.quizzesReducer.quizzes
   );
+  
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
@@ -44,6 +45,28 @@ export default function Quizzes() {
     dispatch(deleteQuiz(quizId));
   };
 
+  function dateFormat(date: Date) {
+    if (!date) return '';
+    const dueDate = new Date(date);
+    return dueDate.toISOString().slice(0, 10);
+}
+  
+function determineAvailability(quiz: { availableDate: Date; availableUntilDate: Date; }) {
+    const currentDate = new Date();
+    const availableDate = new Date(quiz.availableDate);
+    const availableUntilDate = new Date(quiz.availableUntilDate);
+
+    if (currentDate < availableDate) {
+        // Current date is before the available date
+        return `Not available until ${dateFormat(quiz.availableDate)}`;
+    } else if (currentDate >= availableDate && currentDate <= availableUntilDate) {
+        // Current date is between the available date and the available until date
+        return "Available";
+    } else {
+        // Current date is after the available until date
+        return "Closed";
+    }
+}
 
   // Check if the user has FACULTY role
   const isFaculty = currentUser?.role === "FACULTY";
@@ -51,6 +74,7 @@ export default function Quizzes() {
 
 
   return (
+    
     <div>
       <QuizzesControls />
 
@@ -79,10 +103,6 @@ export default function Quizzes() {
                       {isFaculty && (
                         <div>
                           <BsGripVertical className="me-2 fs-3" />
-                          <a href={`#/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}>
-                          <FiEdit onClick={() => editQuiz(quiz._id)}
-                          className="me-4 fs-5 text-success" />
-                          </a>
                         </div>
                       )}
 
@@ -96,29 +116,19 @@ export default function Quizzes() {
                         </a>
 
                         <div className="text-muted small">
-                          <span className="text-danger">Multiple Modules</span>{" "}
-                          | <b>Not available until</b>{" "}
-                          {quiz.availableDate} at{" "}
-                          12:00am | <br />
-                          <b>Due</b> {quiz.dueDate} at{" "} 11:59pm
-                          {quiz.dueTime} | {quiz.points} pts
+                          <span className="text-danger">{determineAvailability(quiz)}</span>{" "}
+                         | <b>Due</b> {dateFormat(quiz.dueDate)} at{" "} 11:59pm
+                          {quiz.dueTime} | -/{quiz.points} pts | {quiz.numOfQuestions} Questions
                         </div>
                       </div>
                     </div>
 
                     <div className="d-flex align-items-center ms-auto">
-                      {/* Show QuizControlButtons only if user is FACULTY */}
-                      {isFaculty && (
+                      
                         <QuizControlButtons
-                          deleteQuiz={(quizId) => removeQuiz(quizId)} quizId={`${quiz._id}`}                        />
-                      )}
+                          deleteQuiz={(quizId) => removeQuiz(quizId)} quizId={`${quiz._id}`} quiz={quiz}                       />
+            
 
-                      {/* If user is not FACULTY, only show GreenCheckmark */}
-                      {!isFaculty && (
-                        <div className="float-end">
-                          <GreenCheckmark />
-                        </div>
-                      )}
                     </div>
                   </div>
                 </li>

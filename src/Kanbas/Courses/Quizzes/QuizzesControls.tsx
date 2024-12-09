@@ -33,16 +33,11 @@ export default function QuizzesControls() {
     if (!cid) return;
     const newQuiz = { 
       title: "Default Quiz", 
-      description: description, 
-      points: points,
-      dueDate: dueDate,
-      availableDate: availableDate,
-      availableUntilDate: availableUntilDate,
       course: cid 
     };
     const quiz = await coursesClient.createQuizForCourse(cid, newQuiz);
     dispatch(addQuiz(quiz));
-    navigate("QuizDetails");
+    navigate(`${quiz._id}`);
     };
 
 
@@ -66,7 +61,7 @@ export default function QuizzesControls() {
     <div>
 
       <button id="wd-add-quiz-btn" className="btn btn-lg btn-danger me-2 p-2"
-      onClick={() => createQuiz()}>
+      onClick={createQuiz}>
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Quiz</button>
 
