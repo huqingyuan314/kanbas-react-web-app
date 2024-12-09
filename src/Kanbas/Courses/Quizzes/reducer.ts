@@ -1,47 +1,53 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  modules: [],
+  quizzes: [],
 };
-const modulesSlice = createSlice({
-  name: "modules",
+
+const quizzesSlice = createSlice({
+  name: "quizzes",
   initialState,
 
   reducers: {
-    setModules: (state, action) => {
-      state.modules = action.payload;
+    setQuizzes: (state, action) => {
+      state.quizzes = action.payload;
     },
 
-    addModule: (state, { payload: module }) => {
-      const newModule: any = {
+
+    addQuiz: (state, { payload: quiz }) => {
+      const newQuiz: any = {
         _id: new Date().getTime().toString(),
-        lessons: [],
-        name: module.name,
-        course: module.course,
+        name: quiz.title,
+        description: quiz.description,
+        points: quiz.points,
+        dueDate: quiz.dueDate,
+        availableDate: quiz.availableDate,
+        availableUntilDate: quiz.availableUntilDate,
+        course: quiz.course,
       };
-      state.modules = [...state.modules, newModule] as any;
+      state.quizzes = [...state.quizzes, newQuiz] as any;
     },
 
-    deleteModule: (state, { payload: moduleId }) => {
-      state.modules = state.modules.filter(
-        (m: any) => m._id !== moduleId);
+    deleteQuiz: (state, { payload: quizId }) => {
+      state.quizzes = state.quizzes.filter(
+        (a: any) => a._id !== quizId);
     },
 
-    updateModule: (state, { payload: module }) => {
-      state.modules = state.modules.map((m: any) =>
-        m._id === module._id ? module : m
+    updateQuiz: (state, { payload: quiz }) => {
+      state.quizzes = state.quizzes.map((a: any) =>
+        a._id === quiz._id ? quiz : a
       ) as any;
     },
     
-    editModule: (state, { payload: moduleId }) => {
-      state.modules = state.modules.map((m: any) =>
-        m._id === moduleId ? { ...m, editing: true } : m
+    editQuiz: (state, { payload: quizId }) => {
+      state.quizzes = state.quizzes.map((a: any) =>
+        a._id === quizId ? { ...a, editing: true } : a
       ) as any;
     },
   },
 });
 
-export const { addModule, deleteModule, updateModule, editModule, setModules } =
-  modulesSlice.actions;
-export default modulesSlice.reducer;
+export const { addQuiz, deleteQuiz, updateQuiz, editQuiz, setQuizzes } = 
+quizzesSlice.actions;
+export default quizzesSlice.reducer;
 

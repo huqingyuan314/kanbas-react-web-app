@@ -95,13 +95,12 @@ export default function Dashboard({
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
 
-
-
           {courses.map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <div className="card rounded-3 overflow-hidden h-100 d-flex flex-column">
-                <Link
-                  to={`/Kanbas/Courses/${course._id}/Home`}
+                <Link 
+                  to={ `/Kanbas/Courses/${course._id}/Home` }
+                  // { enrolling ? `/Kanbas/Courses/${course._id}/Home` : `/Kanbas/Dashboard` }
                   className="wd-dashboard-course-link text-decoration-none text-dark"
                 >
                   {/* <img src="/images/reactjs.jpg" width="100%" /> */}

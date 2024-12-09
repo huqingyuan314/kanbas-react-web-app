@@ -3,6 +3,9 @@ import CoursesNavigation from "./Navigation";
 import Home from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/AssignmentEditor";
+import Quizzes from "./Quizzes";
+import QuizDetails from "./Quizzes/QuizDetails";
+import QuizDetailsEditor from "./Quizzes/QuizDetailsEditor";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
@@ -10,7 +13,8 @@ import PeopleTable from "./People/Table";
 import { useEffect, useState } from "react";
 import * as client from "../Courses/client";
 import PeopleDetails from "./People/Details";
-import Quizzes from "./Quizzes";
+
+
 
 
 export default function Courses({ courses }: { courses: any[]; }) {
@@ -51,12 +55,16 @@ export default function Courses({ courses }: { courses: any[]; }) {
               <Route path="Modules" element={<Modules />} />
               <Route path="Piazza" element={<h2>Piazza</h2>} />
               <Route path="Zoom" element={<h2>Zoom</h2>} />
-              <Route path="Assignments" element={<Assignments />} />
 
+              <Route path="Assignments" element={<Assignments />} />
               <Route path="Assignments/:aid" element={<AssignmentEditor />} />
               <Route path="Assignments/AssignmentEditor" element={<AssignmentEditor />} />
 
-              <Route path="Quizzes" element={<h2>Quizzes</h2>} />
+              <Route path="Quizzes" element={<Quizzes />} />
+              <Route path="Quizzes/QuizDetails" element={<QuizDetails />} />
+              {/* <Route path="Quizzes/:qid" element={<QuizDetailsEditor />} /> */}
+              {/* <Route path="Quizzes/QuizDetailsEditor" element={<QuizDetailsEditor />} /> */}
+
               <Route path="Grades" element={<h2>Grades</h2>} />
               <Route path="People/*" element={<PeopleTable users={users} />} />
               <Route path="People/:uid" element={<PeopleTable users={users} />} />

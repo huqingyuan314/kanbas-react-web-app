@@ -6,7 +6,7 @@ import AssignmentTypeControlButtons from "./AssignmentTypeControlButtons";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import * as db from "../../Database";
+// import * as db from "../../Database";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 import {
   addAssignment,

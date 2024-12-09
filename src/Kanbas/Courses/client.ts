@@ -57,3 +57,19 @@ export const createAssignmentForCourse = async (courseId: string, assignment: an
   const response = await axiosWithCredentials.post(`${COURSES_API}/${courseId}/assignments`, assignment);
   return response.data;
 };
+
+
+export const findQuizzesForCourse = async (courseId: string) => {
+  try {
+    const response = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/quizzes`);
+    return response.data;
+} catch (error) {
+    console.error('Failed to fetch quizzes:', error);
+    return [];
+}
+};
+
+export const createQuizForCourse = async (courseId: string, quiz: any) => {
+  const response = await axiosWithCredentials.post(`${COURSES_API}/${courseId}/quizzes`, quiz);
+  return response.data;
+};

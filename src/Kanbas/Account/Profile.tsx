@@ -31,27 +31,49 @@ export default function Profile() {
       <h3>Profile</h3>
       {profile && (
         <div>
+          <label htmlFor="wd-username">Username</label>
           <input defaultValue={profile.username} id="wd-username" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, username:  e.target.value })}/>
+            
+            <label htmlFor="wd-password">Password</label>
           <input defaultValue={profile.password} id="wd-password" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, password:  e.target.value })}/>
+
+        <label htmlFor="wd-firstname">First name</label>
           <input defaultValue={profile.firstName} id="wd-firstname" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}/>
+
+        <label htmlFor="wd-lastname">Last name</label>
           <input defaultValue={profile.lastName} id="wd-lastname" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, lastName:  e.target.value })}/>
+
+        <label htmlFor="wd-dob">Date of birth</label>
           <input defaultValue={profile.dob} id="wd-dob" className="form-control mb-2"
                  onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date"/>
+
+        <label htmlFor="wd-email">Email</label>
           <input defaultValue={profile.email} id="wd-email" className="form-control mb-2"
                  onChange={ (e) => setProfile({ ...profile, email: e.target.value })}/>
-          <select onChange={(e) => setProfile({ ...profile, role:  e.target.value })}
+                 
+          <label htmlFor="wd-role">Role</label>
+          <select value={profile.role} 
+                 onChange={(e) => setProfile({ ...profile, role:  e.target.value })}
                  className="form-control mb-2" id="wd-role">
-            <option value="USER">User</option>            <option value="ADMIN">Admin</option>
-            <option value="FACULTY">Faculty</option>      <option value="STUDENT">Student</option>
+            {/* <option value="USER">User</option>  */}
+            <option value="ADMIN">Admin</option>
+            <option value="FACULTY">Faculty</option>      
+            <option value="STUDENT">Student</option>
           </select>
+
+          
           <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
           <button onClick={signout} className="btn btn-danger w-100 mb-2" id="wd-signout-btn">
             Sign out
           </button>
         </div>
       )}
-</div>);}
+</div>
+
+
+
+);}
