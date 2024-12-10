@@ -83,7 +83,7 @@ function determineAvailability(quiz: { availableDate: Date; availableUntilDate: 
       <br />
       <br />
 
-      <ul id="wd-quizzes" className="list-group rounded-0">
+      <ul id="wd-quizzes-total" className="list-group rounded-0">
         <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary">
             {isFaculty && <BsGripVertical className="me-2 fs-3" />}
@@ -91,7 +91,7 @@ function determineAvailability(quiz: { availableDate: Date; availableUntilDate: 
             Quizzes
           </div>
 
-          <ul className="wd-lessons list-group rounded-0">
+          <ul className="wd-quizzes list-group rounded-0">
             {quizzes
               .map((quiz: any) => (
                 <li
