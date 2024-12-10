@@ -4,7 +4,7 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { addQuiz, deleteQuiz, updateQuiz, editQuiz } from "./reducer";
+import { addQuiz } from "./reducer";
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
 import { useState } from "react";
@@ -22,12 +22,6 @@ export default function QuizzesControls() {
   const navigate = useNavigate(); // Use navigate hook
   const dispatch = useDispatch();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [points, setPoints] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [availableDate, setAvailableDate] = useState("");
-  const [availableUntilDate, setAvailableUntilDate] = useState("");
   
   const createQuiz = async () => {
     if (!cid) return;

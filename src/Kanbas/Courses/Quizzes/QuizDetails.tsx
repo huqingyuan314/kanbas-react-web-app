@@ -43,7 +43,7 @@ export default function QuizDetails() {
         <FiEye className="position-relative me-2" style={{ bottom: "1px" }} />
         Preview</button>
 
-      <button onClick={ () => navigate(`QuizEditor`) }
+      <button onClick={ () => navigate(`QuizEditor/QuizDetailsEditor`) }
       id="wd-quiz-edit-btn" className="btn btn-lg btn-secondary me-4">
         <MdOutlineEdit className="position-relative" style={{ bottom: "1px" }} />
         Edit
@@ -99,7 +99,7 @@ export default function QuizDetails() {
             <b>Time Limit</b>
           </div>
           <div className="col-7 d-flex justify-content-begin align-items-center">
-            {quiz.timeLimit}
+            {quiz.timeLimit} Minutes
           </div>
         </div>
 

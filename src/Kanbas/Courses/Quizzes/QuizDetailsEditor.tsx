@@ -19,7 +19,17 @@ export default function QuizDetailsEditor() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [quizType, setQuizType] = useState("");
   const [points, setPoints] = useState("");
+  const [assignmentGroup, setAssignmentGroup] = useState("");
+  const [shuffleAnswers, setShuffleAnswers] = useState("");
+  const [timeLimit, setTimeLimit] = useState("");
+  const [multipleAttempts, setMultipleAttempts] = useState("");
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState("");
+  const [accessCode, setAccessCode] = useState("");
+  const [oneQuestionAtATime, setOneQuestionAtATime] = useState("");
+  const [webcamRequired, setWebcamRequired] = useState("");
+  const [lockQuestionsAfterAnswering, setLockQuestionsAfterAnswering] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [availableDate, setAvailableDate] = useState("");
   const [availableUntilDate, setAvailableUntilDate] = useState("");
@@ -32,7 +42,17 @@ export default function QuizDetailsEditor() {
     if (quiz) {
       setTitle(quiz.title);
       setDescription(quiz.description);
+      setQuizType(quiz.quizType);
       setPoints(quiz.points);
+      setAssignmentGroup(quiz.assignmentGroup);
+      setShuffleAnswers(quiz.shuffleAnswers);
+      setTimeLimit(quiz.timeLimit);
+      setMultipleAttempts(quiz.multipleAttempts);
+      setShowCorrectAnswers(quiz.showCorrectAnswers);
+      setAccessCode(quiz.accessCode);
+      setOneQuestionAtATime(quiz.oneQuestionAtATime);
+      setWebcamRequired(quiz.webcamRequired);
+      setLockQuestionsAfterAnswering(quiz.lockQuestionsAfterAnswering);
 
       setDueDate(quiz.dueDate ? quiz.dueDate.split("T")[0] : ""); // Format to YYYY-MM-DD
       setAvailableDate(quiz.availableDate ? quiz.availableDate.split("T")[0] : "");
@@ -92,7 +112,7 @@ export default function QuizDetailsEditor() {
 
         <div className="row mb-4">
           <div className="col">
-            <h3>Quiz Instructions:</h3>
+            <h5>Quiz Instructions:</h5>
             <textarea id="wd-quiz-description" defaultValue={quiz && quiz.description} 
             onChange={(e) => setDescription(e.target.value)}
             className="form-control" rows={10}
@@ -282,7 +302,7 @@ export default function QuizDetailsEditor() {
                 //   published,
                 })
           }
-          className="btn btn-lg btn-primary"
+          className="btn btn-lg btn-success"
         >
           Save and Publish
         </button>

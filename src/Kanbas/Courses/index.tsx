@@ -16,6 +16,8 @@ import PeopleDetails from "./People/Details";
 import QuizPreview from "./Quizzes/QuizPreview";
 import QuizEditor from "./Quizzes/QuizEditor";
 import QuizQuestionsEditor from "./Quizzes/QuizQuestionsEditor";
+import Zoom from "./Zoom";
+import Piazza from "./Piazza";
 
 
 
@@ -56,8 +58,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
               <Route path="/" element={<Navigate to="Home" />} />
               <Route path="Home" element={<Home />} />
               <Route path="Modules" element={<Modules />} />
-              <Route path="Piazza" element={<h2>Piazza</h2>} />
-              <Route path="Zoom" element={<h2>Zoom</h2>} />
+              <Route path="Piazza" element={<Piazza />} />
+              <Route path="Zoom" element={<Zoom />} />
 
               <Route path="Assignments" element={<Assignments />} />
               <Route path="Assignments/:aid" element={<AssignmentEditor />} />
@@ -67,9 +69,12 @@ export default function Courses({ courses }: { courses: any[]; }) {
               <Route path="Quizzes/QuizDetails" element={<QuizDetails />} />
               <Route path="Quizzes/:qid" element={<QuizDetails />} />
 
-              <Route path="Quizzes/:qid/QuizEditor/*" element={<QuizEditor />} />
-              <Route path="Quizzes/:qid/QuizEditor/QuizDetailsEditor" element={<QuizDetailsEditor />} />
-              <Route path="Quizzes/:qid/QuizEditor/QuizQuestionsEditor" element={<QuizQuestionsEditor />} />
+              <Route path="Quizzes/:qid/QuizEditor" element={<QuizEditor />}>
+                {/* Nested Routes */}
+                {/* <Route index element={<QuizDetailsEditor />} /> */}
+                <Route path="QuizDetailsEditor" element={<QuizDetailsEditor />} />
+                <Route path="QuizQuestionsEditor" element={<QuizQuestionsEditor />} />
+              </Route>
 
               <Route path="Quizzes/:qid/QuizPreview" element={<QuizPreview />} />
 

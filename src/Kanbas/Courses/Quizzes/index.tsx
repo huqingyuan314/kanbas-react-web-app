@@ -121,6 +121,7 @@ function determineAvailability(quiz: { availableDate: Date; availableUntilDate: 
                           {quiz.dueTime} | -/{quiz.points} pts | {quiz.numOfQuestions} Questions
                         </div>
                       </div>
+                      
                     </div>
 
                     <div className="d-flex align-items-center ms-auto">
