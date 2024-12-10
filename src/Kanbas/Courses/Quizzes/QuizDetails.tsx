@@ -127,7 +127,8 @@ export default function QuizDetails() {
             <b>Show Correct Answers</b>
           </div>
           <div className="col-7 d-flex justify-content-begin align-items-center">
-            {quiz.showCorrectAnswers}
+            {quiz.showCorrectAnswers && "Yes"}
+            {!quiz.showCorrectAnswers && "No"}
           </div>
         </div>
 

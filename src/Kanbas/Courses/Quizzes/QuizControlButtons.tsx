@@ -7,7 +7,7 @@ import { MdOutlinePublish, MdOutlineUnpublished } from "react-icons/md";
 import { RiProhibitedLine } from "react-icons/ri";
 
 import { useDispatch, useSelector } from "react-redux";
-import { editQuiz, updateQuiz } from "./reducer";
+import { editQuiz, updateQuiz, deleteQuiz } from "./reducer";
 import { useParams, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 
@@ -57,6 +57,7 @@ export default function QuizControlButtons(
         <IoEllipsisVertical className="fs-4" type="button" data-bs-toggle="dropdown" />
 
         <ul className="dropdown-menu">
+          
           <li>
             <button onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}`)}
             id="wd-quiz-context-menu-edit" className="dropdown-item">
@@ -68,7 +69,8 @@ export default function QuizControlButtons(
 
           <li>
             <button id="wd-quiz-context-menu-delete" className="dropdown-item"
-              data-bs-toggle="modal" data-bs-target="#wd-delete-quiz-dialog">
+              // data-bs-toggle="modal" data-bs-target="#wd-delete-quiz-dialog"
+              onClick={() => deleteQuiz(quizId)} >
               <FaTrash className="text-danger me-2 mb-1" />
               Delete
             </button>
@@ -89,8 +91,8 @@ export default function QuizControlButtons(
       </div>
       )}
 
-      <DeleteDialog dialogTitle="Are you sure to delete the quiz?"
-                    onDeleteConfirm={() => deleteQuiz(quizId)} />
+      {/* <DeleteDialog dialogTitle="Are you sure to delete the quiz?"
+                    onDeleteConfirm={() => deleteQuiz(quizId)} /> */}
     </div>
   );
 }

@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SimpleWysiwyg from 'react-simple-wysiwyg';
 import { useParams, useNavigate } from "react-router";
 
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-import { addQuiz, deleteQuiz, updateQuiz, editQuiz } from "./reducer";
+import { addQuiz, updateQuiz, editQuiz } from "./reducer";
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
 
@@ -19,21 +20,22 @@ export default function QuizDetailsEditor() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  
   const [quizType, setQuizType] = useState("");
   const [points, setPoints] = useState("");
   const [assignmentGroup, setAssignmentGroup] = useState("");
-  const [shuffleAnswers, setShuffleAnswers] = useState("");
+  const [shuffleAnswers, setShuffleAnswers] = useState<any>({});
   const [timeLimit, setTimeLimit] = useState("");
-  const [multipleAttempts, setMultipleAttempts] = useState("");
-  const [showCorrectAnswers, setShowCorrectAnswers] = useState("");
+  const [multipleAttempts, setMultipleAttempts] = useState<any>({});
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState<any>({});
   const [accessCode, setAccessCode] = useState("");
-  const [oneQuestionAtATime, setOneQuestionAtATime] = useState("");
-  const [webcamRequired, setWebcamRequired] = useState("");
-  const [lockQuestionsAfterAnswering, setLockQuestionsAfterAnswering] = useState("");
+  const [oneQuestionAtATime, setOneQuestionAtATime] = useState<any>({});
+  const [webcamRequired, setWebcamRequired] = useState<any>({});
+  const [lockQuestionsAfterAnswering, setLockQuestionsAfterAnswering] = useState<any>({});
   const [dueDate, setDueDate] = useState("");
   const [availableDate, setAvailableDate] = useState("");
   const [availableUntilDate, setAvailableUntilDate] = useState("");
-  const [published, setPublished] = useState("");
+  const [published, setPublished] = useState<any>({});
 
   const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
   const quiz = quizzes.find((quiz: any) => quiz._id === qid);
@@ -53,35 +55,16 @@ export default function QuizDetailsEditor() {
       setOneQuestionAtATime(quiz.oneQuestionAtATime);
       setWebcamRequired(quiz.webcamRequired);
       setLockQuestionsAfterAnswering(quiz.lockQuestionsAfterAnswering);
-
       setDueDate(quiz.dueDate ? quiz.dueDate.split("T")[0] : ""); // Format to YYYY-MM-DD
       setAvailableDate(quiz.availableDate ? quiz.availableDate.split("T")[0] : "");
       setAvailableUntilDate(quiz.availableUntilDate ? quiz.availableUntilDate.split("T")[0] : "");
-
       setPublished(quiz.published);
     }
   }, [quiz]);  // Dependencies array includes quiz to run effect when it changes
 
 
-  // Save button handler
-  const createQuiz = async () => {
-    if (!cid) return;
-    const newQuiz = { 
-      title: title, 
-      description: description, 
-      points: points,
-      dueDate: dueDate,
-      availableDate: availableDate,
-      availableUntilDate: availableUntilDate,
-      published: published,
-      course: cid 
-    };
-    const quiz = await coursesClient.createQuizForCourse(cid, newQuiz);
-    dispatch(addQuiz(quiz));
-    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
-    };
 
-    const editAndUpdateQuiz = async (updatedQuiz: any) => {
+    const saveQuiz = async (updatedQuiz: any) => {
       try {
         await quizzesClient.updateQuiz(updatedQuiz); // API call
         dispatch(updateQuiz(updatedQuiz)); // Update Redux state
@@ -90,7 +73,23 @@ export default function QuizDetailsEditor() {
         console.error("Error updating quiz:", error);
       }
     };
+
+    const saveAndPublishQuiz = async (updatedQuiz: any) => {
+        // Set the 'published' property to true
+        const quizToPublish = {
+        ...updatedQuiz,
+        published: true
+        };
+        try {
+          await quizzesClient.updateQuiz(quizToPublish); // API call
+          dispatch(updateQuiz(quizToPublish)); // Update Redux state
+          navigate(`/Kanbas/Courses/${cid}/Quizzes`); // Navigate back to quizzes
+        } catch (error) {
+          console.error("Error updating quiz:", error);
+        }
+      };
   
+
   const { currentUser } = useSelector((state: any) => state.accountReducer);
     // Check if the user has FACULTY role
     const isFaculty = currentUser?.role === "FACULTY";
@@ -113,15 +112,33 @@ export default function QuizDetailsEditor() {
         <div className="row mb-4">
           <div className="col">
             <h5>Quiz Instructions:</h5>
-            <textarea id="wd-quiz-description" defaultValue={quiz && quiz.description} 
+            {/* <textarea id="wd-quiz-description" defaultValue={quiz && quiz.description} 
             onChange={(e) => setDescription(e.target.value)}
             className="form-control" rows={10}
             readOnly={!isFaculty} >
-            </textarea>
+            </textarea> */}
+            <SimpleWysiwyg
+                value={description} onChange={(e) => setDescription(e.target.value)}
+                />
           </div>
         </div>
 
 
+        <div className="row mb-4 justify-content-end">
+          <div className="col-4 d-flex justify-content-end align-items-center">
+            <label htmlFor="wd-quiz-type">Quiz Type</label>
+          </div>
+          <div className="col-8 d-flex justify-content-end align-items-center">
+            <select id="wd-quiz-type" className="form-select"
+            disabled={!isFaculty} defaultValue={quiz.quizType}
+            onChange={(e) => setQuizType(e.target.value)} >
+              <option value="GRADED-QUIZ">Graded Quiz</option>
+              <option value="PRACTICE-QUIZ">Practice Quiz</option>
+              <option value="GRADED-SURVEY">Graded Survey</option>
+              <option value="UNGRADED-SURVEY">Ungraded Survey</option>
+            </select>
+          </div>
+          </div>
 
         <div className="row mb-4 justify-content-end">
           <div className="col-4 d-flex justify-content-end align-items-center">
@@ -129,24 +146,9 @@ export default function QuizDetailsEditor() {
           </div>
           <div className="col-8 d-flex justify-content-end align-items-center">
             <input id="wd-quiz-points" defaultValue={quiz && quiz.points} 
-            onChange={(e) => setPoints(e.target.value)}
+            type="number" onChange={(e) => setPoints(e.target.value)}
             className="form-control" 
             readOnly={!isFaculty} />
-          </div>
-          </div>
-
-          <div className="row mb-4 justify-content-end">
-          <div className="col-4 d-flex justify-content-end align-items-center">
-            <label htmlFor="wd-quiz-type">Quiz Type</label>
-          </div>
-          <div className="col-8 d-flex justify-content-end align-items-center">
-            <select id="wd-quiz-type" className="form-control"
-            disabled={!isFaculty} >
-              <option value="GRADED-QUIZ" selected>Graded Quiz</option>
-              <option value="PRACTICE-QUIZ">Practice Quiz</option>
-              <option value="GRADED-SURVEY">Graded Survey</option>
-              <option value="UNGRADED-SURVEY">Ungraded Survey</option>
-            </select>
           </div>
           </div>
 
@@ -155,9 +157,10 @@ export default function QuizDetailsEditor() {
             <label htmlFor="wd-quiz-group">Assignment Group</label>
           </div>
           <div className="col-8 d-flex justify-content-end align-items-center">
-            <select id="wd-quiz-group" className="form-control"
-            disabled={!isFaculty} >
-              <option value="QUIZZES" selected>Quizzes</option>
+            <select id="wd-quiz-group" className="form-select"
+            disabled={!isFaculty} defaultValue={quiz.assignmentGroup}
+            onChange={(e) => setAssignmentGroup(e.target.value)} >
+              <option value="QUIZZES">Quizzes</option>
               <option value="EXAMS">Exams</option>
               <option value="ASSIGNMENTS" >Assignments</option>
               <option value="PROJECT">Project</option>
@@ -170,41 +173,78 @@ export default function QuizDetailsEditor() {
 <div className="row mb-4 align-items-top">
 
   <div className="col-4 text-end">
-    <label htmlFor="wd-submission-type" className="col-form-label">Submission Type</label>
+    {/* <label htmlFor="wd-submission-type" className="col-form-label">Submission Type</label> */}
   </div>
 
   <div className="col-8 border rounded p-3">
-  <div className="col">
-    <select id="wd-submission-type" className="form-control"
-    disabled={!isFaculty} >
-      <option value="ONLINE" selected>Online</option>
-      <option value="ON PAPER">On Paper</option>
-      <option value="EXTERNAL TOOL">External Tool</option>
-      <option value="NO SUBMISSION">No Submission</option>
-    </select>
-  </div>
 
-
-  {/* Online Entry Options */}
+  {/* Options */}
   <div className="col-4 text-end">
   </div>
   <div className="col-8">
-  <label htmlFor="wd-online-entry-options" className="col-form-label"><b>Online Entry Options</b></label>
+  <label htmlFor="wd-quiz-options" className="col-form-label"><b>Options</b></label>
     <div className="form-check">
-      <input className="form-check-input" type="checkbox" id="wd-text-entry" disabled={!isFaculty} />
-      <label className="form-check-label" htmlFor="wd-text-entry">Text Entry</label><br />
-      
-      <input className="form-check-input" type="checkbox" id="wd-website-url" disabled={!isFaculty} />
-      <label className="form-check-label" htmlFor="wd-website-url">Website URL</label><br />
-      
-      <input className="form-check-input" type="checkbox" id="wd-media-recordings" disabled={!isFaculty} />
-      <label className="form-check-label" htmlFor="wd-media-recordings">Media Recordings</label><br />
-      
-      <input className="form-check-input" type="checkbox" id="wd-student-annotation" disabled={!isFaculty} />
-      <label className="form-check-label" htmlFor="wd-student-annotation">Student Annotation</label><br />
-      
-      <input className="form-check-input" type="checkbox" id="wd-file-upload" disabled={!isFaculty} />
-      <label className="form-check-label" htmlFor="wd-file-upload">File Uploads</label>
+
+    <div>
+      <input className="form-check-input" type="checkbox" id="wd-quiz-shuffle-answers" disabled={!isFaculty}
+      defaultChecked={quiz.shuffleAnswers}
+      onChange={(e) => setShuffleAnswers( e.target.checked ) }  />
+      <label className="form-check-label" htmlFor="wd-quiz-shuffle-answers">Shuffle Answers</label><br />
+    </div>
+
+
+    <div className="d-flex align-items-center">
+      <input className="form-check-input" type="checkbox" id="wd-quiz-time-limit" disabled={!isFaculty}
+      defaultChecked={true} 
+    //   onChange={(e) => setMultipleAttempts(e.target.checked )} 
+      />
+      <label className="form-check-label col-4" htmlFor="wd-quiz-time-limit">&#20; Time Limit</label>
+      <input className="form-control me-2" id="wd-quiz-time-limit-input" disabled={!isFaculty}
+      type="number" defaultValue={quiz.timeLimit} onChange={(e) => setTimeLimit(e.target.value)} />
+      <label className="form-check-label col-3" htmlFor="wd-quiz-time-limit-input">Minutes</label><br/>
+    </div>
+
+    <div>
+      <input className="form-check-input" type="checkbox" id="wd-quiz-multiple-attempts" disabled={!isFaculty}
+      defaultChecked={quiz.multipleAttempts} 
+      onChange={(e) => setMultipleAttempts(e.target.checked )} />
+      <label className="form-check-label" htmlFor="wd-quiz-multiple-attempts">Multiple Attempts</label><br />
+    </div>
+
+    <div>
+      <input className="form-check-input" type="checkbox" id="wd-quiz-showCorrectAnswers" disabled={!isFaculty}
+      defaultChecked={quiz.showCorrectAnswers} 
+      onChange={(e) => setShowCorrectAnswers(e.target.checked )} />
+      <label className="form-check-label" htmlFor="wd-quiz-showCorrectAnswers">Show Correct Answers</label><br />
+    </div>
+
+    <div className="d-flex align-items-center">
+      <label className="form-check-label col-4" htmlFor="wd-quiz-access-code">Access Code</label>
+      <input className="form-control me-2" id="wd-quiz-access-code" disabled={!isFaculty}
+      defaultValue={quiz.accessCode} onChange={(e) => setAccessCode(e.target.value)} />
+    </div>
+
+    <div>
+      <input className="form-check-input" type="checkbox" id="wd-quiz-oneQuestionAtATime" disabled={!isFaculty}
+      defaultChecked={quiz.oneQuestionAtATime} 
+      onChange={(e) => setOneQuestionAtATime(e.target.checked )} />
+      <label className="form-check-label" htmlFor="wd-quiz-oneQuestionAtATime">One Question at a Time</label><br />
+    </div>
+
+    <div>
+      <input className="form-check-input" type="checkbox" id="wd-quiz-webcamRequired" disabled={!isFaculty}
+      defaultChecked={quiz.webcamRequired} 
+      onChange={(e) => setWebcamRequired(e.target.checked )} />
+      <label className="form-check-label" htmlFor="wd-quiz-webcamRequired">Webcam Required</label><br />
+    </div>
+
+    <div>
+      <input className="form-check-input" type="checkbox" id="wd-quiz-lockQuestionsAfterAnswering" disabled={!isFaculty}
+      defaultChecked={quiz.lockQuestionsAfterAnswering} 
+      onChange={(e) => setLockQuestionsAfterAnswering(e.target.checked )} />
+      <label className="form-check-label" htmlFor="wd-quiz-lockQuestionsAfterAnswering">Lock Questions After Answering</label><br />
+    </div>
+
     </div>
   </div>
   </div>
@@ -266,14 +306,21 @@ export default function QuizDetailsEditor() {
           <button
           id="wd-quiz-save-btn"
           type="button"
-          onClick={() =>
-            location.pathname.includes("QuizDatailsEditor")
-              ? createQuiz()
-              : editAndUpdateQuiz({
+          onClick={() => saveQuiz({
                   _id: quiz._id,
                   title,
                   description,
+                  quizType,
                   points,
+                  assignmentGroup,
+                  shuffleAnswers,
+                  timeLimit,
+                  multipleAttempts,
+                  showCorrectAnswers,
+                  accessCode,
+                  oneQuestionAtATime,
+                  webcamRequired,
+                  lockQuestionsAfterAnswering,
                   dueDate,
                   availableDate,
                   availableUntilDate,
@@ -285,23 +332,31 @@ export default function QuizDetailsEditor() {
           Save
         </button>
 
+
         <button
           id="wd-quiz-saveAndPublish-btn"
           type="button"
-          onClick={() =>
-            location.pathname.includes("QuizDatailsEditor")
-              ? createQuiz()
-              : editAndUpdateQuiz({
-                  _id: quiz._id,
-                  title,
-                  description,
-                  points,
-                  dueDate,
-                  availableDate,
-                  availableUntilDate,
-                //   published,
-                })
-          }
+          onClick={() => saveAndPublishQuiz({
+            _id: quiz._id,
+            title,
+            description,
+            quizType,
+            points,
+            assignmentGroup,
+            shuffleAnswers,
+            timeLimit,
+            multipleAttempts,
+            showCorrectAnswers,
+            accessCode,
+            oneQuestionAtATime,
+            webcamRequired,
+            lockQuestionsAfterAnswering,
+            dueDate,
+            availableDate,
+            availableUntilDate,
+            published,
+          })
+    }
           className="btn btn-lg btn-success"
         >
           Save and Publish
