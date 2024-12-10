@@ -18,6 +18,7 @@ import QuizEditor from "./Quizzes/QuizEditor";
 import QuizQuestionsEditor from "./Quizzes/QuizQuestionsEditor";
 import Zoom from "./Zoom";
 import Piazza from "./Piazza";
+import QuestionEditorType from "./Quizzes/Questions/QuestionEditorType";
 
 
 
@@ -75,7 +76,13 @@ export default function Courses({ courses }: { courses: any[]; }) {
                 <Route path="QuizQuestionsEditor" element={<QuizQuestionsEditor />} />
               </Route>
 
+              <Route path="Quizzes/:qid/QuizEditor/QuizQuestionsEditor/:quid" element={<QuestionEditorType />} />
+
               <Route path="Quizzes/:qid/QuizPreview" element={<QuizPreview />} />
+
+
+
+
 
               <Route path="Grades" element={<h2>Grades</h2>} />
               <Route path="People/*" element={<PeopleTable users={users} />} />

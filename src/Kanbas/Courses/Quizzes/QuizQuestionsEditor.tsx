@@ -10,10 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { BsGripVertical } from "react-icons/bs";
 import { RxTriangleDown } from "react-icons/rx";
+import { FiEdit } from "react-icons/fi";
 
 export default function QuizQuestionsEditor() {
 
-    const { cid, qid } = useParams();
+    const { cid, qid, quid } = useParams();
     const navigate = useNavigate(); // Use navigate hook
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -89,11 +90,18 @@ export default function QuizQuestionsEditor() {
                     <div>
                         <a
                             className="wd-question-link text-danger text-decoration-none"
-                            href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizEditor/QuizQuestionsEditor/${question._id}`}
-                            onClick={() => editQuestion(question._id)}
+                            href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizEditor/QuizQuestionsEditor/${question._id}`}   
+                             
                         >
-                            {question.title}
+                            <FiEdit  onClick={() => editQuestion(question._id)}
+                          className="me-4 fs-5 text-success" />
+                            
                         </a>
+                        <span className="wd-question-link text-danger text-decoration-none">
+                        {question.title}
+                        </span>
+
+
                         <div className="text-muted small">
                             <b>{question.questionType}</b> | {question.points ?? 'N/A'} pts <br/>
                         </div>
