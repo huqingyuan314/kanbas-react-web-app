@@ -3,10 +3,10 @@ import { RxTriangleDown } from "react-icons/rx";
 import { FiEdit } from "react-icons/fi";
 import GreenCheckmark from "../Modules/GreenCheckmark";
 
-import QuizzesControls from "./QuizzesControls";
+// import QuizzesControls from "./QuizzesControls";
 import QuizControlButtons from "./QuizControlButtons";
 
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
 
@@ -16,12 +16,18 @@ import {
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
 import { useEffect, useState } from "react";
+import { HiMagnifyingGlass } from "react-icons/hi2";
+import { FaPlus } from "react-icons/fa";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { wait } from "@testing-library/user-event/dist/utils";
 
 
 
 export default function Quizzes() {
 
   const { cid } = useParams();
+  const navigate = useNavigate();
+  
   const [quizTitle, setQuizTitle] = useState("");
 
   const quizzes = useSelector(
@@ -32,12 +38,14 @@ export default function Quizzes() {
   const dispatch = useDispatch();
 
   const fetchQuizzes = async () => {
+    console.log(`Fetching quizzes for course ID: ${cid}`);
     const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
+    console.log('Quizzes fetched:', quizzes);
     dispatch(setQuizzes(quizzes));
   };
   useEffect(() => {
     fetchQuizzes();
-  }, []);
+  }, [cid]);
 
 
   const removeQuiz = async (quizId: string) => {
@@ -72,11 +80,64 @@ function determineAvailability(quiz: { availableDate: Date; availableUntilDate: 
   const isFaculty = currentUser?.role === "FACULTY";
 
 
+  const [quiz, setQuiz] = useState<any>({})
+
+
+  const createQuiz = async () => {
+    if (!cid) return;
+    const newQuiz = { 
+      title: `Default Quiz`, 
+      course: cid 
+    };
+    const quiz = await coursesClient.createQuizForCourse(cid, newQuiz);
+    dispatch(addQuiz(quiz));
+    navigate(`${quiz._id}`);
+    wait(50);
+    navigate(-1);
+    // wait(50);
+    // navigate(`${quiz._id}`);
+    };
+
+
 
   return (
     
     <div>
-      <QuizzesControls />
+
+      <div id="wd-quizzes-controls" className="d-flex justify-content-end align-items-center text-nowrap">
+
+<div className="input-group me-5">
+ <span className="input-group-text" id="basic-addon1">
+   <HiMagnifyingGlass />
+ </span>
+ <input id="wd-search-quiz"
+        placeholder="Search for Quiz"
+        className="form-control p-2"
+        aria-describedby="basic-addon1" />
+ </div> 
+            
+            
+   {/* Show only if user is FACULTY */}
+   {isFaculty &&
+   <div>
+
+     <button id="wd-add-quiz-btn" className="btn btn-lg btn-danger me-2 p-2"
+     onClick={createQuiz}>
+       <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
+       Quiz</button>
+
+     <button id="wd-add-group-btn" className="btn btn-lg btn-secondary me-2">
+       <IoEllipsisVertical className="position-relative" style={{ bottom: "1px" }} />
+     </button>
+
+     </div>
+}
+
+
+   </div>
+
+
+
 
       <br />
       <br />

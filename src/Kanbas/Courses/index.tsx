@@ -66,17 +66,17 @@ export default function Courses({ courses }: { courses: any[]; }) {
               <Route path="Assignments/:aid" element={<AssignmentEditor />} />
               <Route path="Assignments/AssignmentEditor" element={<AssignmentEditor />} />
 
+
               <Route path="Quizzes" element={<Quizzes />} />
-              <Route path="Quizzes/QuizDetails" element={<QuizDetails />} />
+              {/* <Route path="Quizzes/QuizDetails" element={<QuizDetails />} /> */}
               <Route path="Quizzes/:qid" element={<QuizDetails />} />
 
               <Route path="Quizzes/:qid/QuizEditor" element={<QuizEditor />}>
                 {/* Nested Routes */}
                 <Route path="QuizDetailsEditor" element={<QuizDetailsEditor />} />
                 <Route path="QuizQuestionsEditor" element={<QuizQuestionsEditor />} />
+                <Route path="QuizQuestionsEditor/:quid" element={<QuestionEditorType />} />
               </Route>
-
-              <Route path="Quizzes/:qid/QuizEditor/QuizQuestionsEditor/:quid" element={<QuestionEditorType />} />
 
               <Route path="Quizzes/:qid/QuizPreview" element={<QuizPreview />} />
 
