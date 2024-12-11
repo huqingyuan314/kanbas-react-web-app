@@ -19,6 +19,7 @@ import QuizQuestionsEditor from "./Quizzes/QuizQuestionsEditor";
 import Zoom from "./Zoom";
 import Piazza from "./Piazza";
 import QuestionEditorType from "./Quizzes/Questions/QuestionEditorType";
+import QuestionEditor from "./Quizzes/Questions/QuestionEditor";
 
 
 
@@ -75,7 +76,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
                 {/* Nested Routes */}
                 <Route path="QuizDetailsEditor" element={<QuizDetailsEditor />} />
                 <Route path="QuizQuestionsEditor" element={<QuizQuestionsEditor />} />
-                <Route path="QuizQuestionsEditor/:quid" element={<QuestionEditorType />} />
+                <Route path="QuizQuestionsEditor/:quid" element={<QuestionEditor />} />
               </Route>
 
               <Route path="Quizzes/:qid/QuizPreview" element={<QuizPreview />} />

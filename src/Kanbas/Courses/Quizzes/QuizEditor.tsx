@@ -11,6 +11,7 @@ export default function QuizEditor() {
 
     const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
     const quiz = quizzes.find((quiz: any) => quiz._id === qid);
+    
 
     return (
 
