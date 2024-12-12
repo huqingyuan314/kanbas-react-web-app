@@ -107,7 +107,7 @@ export default function QuestionEditor( ) {
             return (
 <div id="wd-multiple-choice-selector">
   <form>
-    
+
     <div>
                 {choices.map((choice, index) => (
                     <div key={index} className="mb-2 d-flex align-items-center col">
@@ -135,7 +135,8 @@ export default function QuestionEditor( ) {
                     </div>
                 ))}
 
-                <button onClick={addChoice} className="btn btn-clear text-danger">+ Add Another Answer</button>
+                <button type="button" onClick={addChoice} 
+                className="btn btn-clear text-danger">+ Add Another Answer</button>
             </div>
 
   </form>
