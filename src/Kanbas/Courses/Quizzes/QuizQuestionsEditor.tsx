@@ -40,7 +40,7 @@ export default function QuizQuestionsEditor() {
           choices: ["Option A", "Option B", "Option C", "Option D"],
           choicesAnswer: "Option A",
           trueFalse: true,
-          blanks: [""],
+          blanks: [],
           quiz: qid,
         };
         const question = await quizzesClient.createQuestionForQuiz(qid, newQuestion);
@@ -88,11 +88,11 @@ export default function QuizQuestionsEditor() {
                       <li>False</li>
                         </ul>)
             } else if (question.questionType === "FILL-BLANK") {
-                return (<ol>
+                return (<ul>
                   {(question.blanks ?? []).map((blank: any) => (
-                      <ul>{blank.text}</ul>
+                        <li>{blank}</li>
                   ))}
-                  </ol>)
+                  </ul>)
             } else {
                 return
             }
@@ -146,7 +146,7 @@ export default function QuizQuestionsEditor() {
 
     <br/>
     <div className="mb-1 d-flex justify-content-center">
-      <button 
+      <button type="button"
         onClick={createQuestion}
       id="wd-new-question-btn" className="btn btn-lg btn-secondary me-4">
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />

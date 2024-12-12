@@ -18,7 +18,6 @@ import QuizEditor from "./Quizzes/QuizEditor";
 import QuizQuestionsEditor from "./Quizzes/QuizQuestionsEditor";
 import Zoom from "./Zoom";
 import Piazza from "./Piazza";
-import QuestionEditorType from "./Quizzes/Questions/QuestionEditorType";
 import QuestionEditor from "./Quizzes/Questions/QuestionEditor";
 
 

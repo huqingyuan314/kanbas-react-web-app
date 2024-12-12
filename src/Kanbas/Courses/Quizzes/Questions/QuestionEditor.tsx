@@ -1,5 +1,4 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import QuestionEditorType from "./QuestionEditorType";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as questionsClient from "./client";
@@ -23,6 +22,9 @@ export default function QuestionEditor( ) {
     const [description, setDescription] = useState("");
 
     const [choices, setChoices] = useState([{text: '', correct: false}]);
+    const [trueFalse, setTrueFalse,] = useState<any>({});
+    const [blanks, setBlanks] = useState<string[]>([]);
+    const [newAnswer, setNewAnswer] = useState("");
 
     useEffect(() => {
         if (question) {
@@ -35,6 +37,13 @@ export default function QuestionEditor( ) {
             text: choice,
             correct: choice === question.choicesAnswer
         })));
+
+          setTrueFalse(question.trueFalse);
+
+          if (question.blanks) {
+            setBlanks(question.blanks);
+        }
+
         }
       }, [question]); 
 
@@ -61,6 +70,24 @@ export default function QuestionEditor( ) {
     const removeChoice = (index: number) => {
         setChoices(choices.filter((_, i) => i !== index));
     };
+
+
+    const handleAddAnswer = () => {
+        if (newAnswer.trim() !== "") {
+            setBlanks(prev => [...prev, newAnswer.trim()]);
+            setNewAnswer(""); // Clear input after adding
+        }
+    };
+
+    const handleRemoveAnswer = (index: any) => {
+        setBlanks(prev => prev.filter((_, idx) => idx !== index));
+    };
+
+    const handleInputChange = (event: any) => {
+        setNewAnswer(event.target.value);
+    };
+
+
     
 
       const updateQuestionType = async (updatedQuestion: any) => {
@@ -107,17 +134,15 @@ export default function QuestionEditor( ) {
             return (
 <div id="wd-multiple-choice-selector">
   <form>
-
     <div>
                 {choices.map((choice, index) => (
-                    <div key={index} className="mb-2 d-flex align-items-center col">
+                    <div key={index} className="form-check mb-2 d-flex align-items-center col">
                         <input
+                            className="form-check-input ms-2 me-3"
                             type="radio"
                             name="correctAnswer"
                             checked={choice.correct}
                             onChange={() => handleChoiceToggle(index)}
-                            className="ms-2 me-3"
-                            style={{ transform: "scale(1.5)" }}
                         />
                         <label className={`form-check-label col-2 ${choice.correct ? "text-success" : ""}`} 
                         htmlFor="null">
@@ -145,11 +170,79 @@ export default function QuestionEditor( ) {
         
         
         } else if (question.questionType === "TRUE-FALSE") {
-            return 
+            return (
+<div id="wd-true-false-selector">
+
+<div className="form-check d-flex align-items-center col">
+    <div className="me-4" />
+  <input
+    className="form-check-input me-2" 
+    type="radio"
+    name="trueFalseAnswer"
+    id="trueOption"
+    checked={trueFalse}
+    onChange={() => setTrueFalse(true)}
+  />
+  <label className={`form-check-label col-2 ${trueFalse ? "text-success" : ""}`}
+  htmlFor="trueOption">
+    True
+  </label>
+</div>
+<div className="form-check d-flex align-items-center col">
+<div className="me-4" />
+  <input
+    className="form-check-input me-2"
+    type="radio"
+    name="trueFalseAnswer"
+    id="falseOption"
+    checked={!trueFalse}
+    onChange={() => setTrueFalse(false)}
+  />
+  <label className={`form-check-label col-2 ${trueFalse ? "" : "text-success"}`}
+   htmlFor="falseOption">
+    False
+  </label>
+</div>
+
+</div>
+
+            )
         
         
         } else if (question.questionType === "FILL-BLANK") {
-            return 
+            return (
+                <div className="fill-in-the-blank-editor">
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter a possible answer"
+                        value={newAnswer}
+                        onChange={handleInputChange}
+                    />
+                    <button className="btn btn-outline-secondary" type="button" onClick={handleAddAnswer}>
+                        Add Answer
+                    </button>
+                </div>
+    
+                <ul className="list-group">
+                    {blanks.map((answer, index) => (
+                        <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                            <label className={`form-check-label col-3`} 
+                        htmlFor="index">
+                        Possible Answer: </label>
+                            
+                            {answer}
+
+                            <FaTrash onClick={() => handleRemoveAnswer(index)}
+                          className="me-4 fs-5 text-danger" />
+                        </li>
+                    ))}
+                </ul>
+
+            </div>
+                
+                            )
         
     
         } else {
@@ -184,7 +277,9 @@ export default function QuestionEditor( ) {
                     points,
                     description,
                     choices: choices.map(choice => choice.text),
-                    choicesAnswer: choices.find(choice => choice.correct)?.text || ''
+                    choicesAnswer: choices.find(choice => choice.correct)?.text || '',
+                    trueFalse,
+                    blanks,
                 });
             }} >
               <option value="MULTIPLE-CHOICE">Multiple Choice</option>
@@ -207,8 +302,6 @@ export default function QuestionEditor( ) {
 
 
 <hr />
-
-        {/* <QuestionEditorType /> */}
 
         <div>
             {determineInstruction(question)}
@@ -246,7 +339,9 @@ export default function QuestionEditor( ) {
           points,
           description,
           choices: choices.map(choice => choice.text),
-          choicesAnswer: choices.find(choice => choice.correct)?.text || ''
+          choicesAnswer: choices.find(choice => choice.correct)?.text || '',
+          trueFalse,
+          blanks,
         })
   }
   className="btn btn-lg btn-danger me-3"

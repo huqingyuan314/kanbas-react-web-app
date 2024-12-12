@@ -57,7 +57,7 @@ export default function QuizzesControls() {
     {isFaculty &&
     <div>
 
-      <button id="wd-add-quiz-btn" className="btn btn-lg btn-danger me-2 p-2"
+      <button type="button" id="wd-add-quiz-btn" className="btn btn-lg btn-danger me-2 p-2"
       onClick={createQuiz}>
         <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
         Quiz</button>

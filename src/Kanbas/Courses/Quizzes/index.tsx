@@ -94,8 +94,6 @@ function determineAvailability(quiz: { availableDate: Date; availableUntilDate: 
     navigate(`${quiz._id}`);
     wait(50);
     navigate(-1);
-    // wait(50);
-    // navigate(`${quiz._id}`);
     };
 
 
