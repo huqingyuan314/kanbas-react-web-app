@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaPlus, FaTrash } from "react-icons/fa6";
+import parse from 'html-react-parser';
 
 import {
     addQuestion, deleteQuestion, updateQuestion, editQuestion, setQuestions
@@ -34,15 +35,10 @@ export default function QuizQuestionsEditor() {
         if (!qid) return;
         const newQuestion = { 
           title: `Default Question ${questions.length + 1}`, 
-          description: "Default question description, please modify it.",
+          description: "Default question description.",
           questionType: "MULTIPLE-CHOICE",
-          choices: [
-            { identifier: "A" , text: "Option A" },
-            { identifier: "B" , text: "Option B" },
-            { identifier: "C" , text: "Option C" },
-            { identifier: "D" , text: "Option D" },
-        ],
-          choicesAnswer: "A",
+          choices: ["Option A", "Option B", "Option C", "Option D"],
+          choicesAnswer: "Option A",
           trueFalse: true,
           blanks: [""],
           quiz: qid,
@@ -81,20 +77,20 @@ export default function QuizQuestionsEditor() {
         }) {
     
             if ( question.questionType === "MULTIPLE-CHOICE" ) {
-                return (<ol>
+                return (<ul>
                 {(question.choices ?? []).map((choice: any) => (
-                    <li key={choice.identifier}>{choice.text}</li>
+                    <li>{choice}</li>
                 ))}
-                </ol>)
+                </ul>)
             } else if (question.questionType === "TRUE-FALSE") {
-                return (<ol>
+                return (<ul>
                       <li>True</li>
                       <li>False</li>
-                        </ol>)
+                        </ul>)
             } else if (question.questionType === "FILL-BLANK") {
                 return (<ol>
                   {(question.blanks ?? []).map((blank: any) => (
-                      <li key={blank.identifier}>{blank.text}</li>
+                      <ul>{blank.text}</ul>
                   ))}
                   </ol>)
             } else {
@@ -104,25 +100,27 @@ export default function QuizQuestionsEditor() {
 
 
     const [points, setPoints] = useState(0);
+    const [numOfQuestions, setNumOfQuestions] = useState("");
 
 
   useEffect(() => {
     const sum = questions.reduce((acc: any, question: { points: any; }) => acc + (question.points || 0), 0);
     setPoints(sum);
+    setNumOfQuestions(questions.length);
   }, [questions]); // Recalculate when questions change
 
 
   useEffect(() => {
     const updateQuizPoints = async () => {
       if (quiz && points !== quiz.points) {
-        const updatedQuiz = { ...quiz, points: points };
+        const updatedQuiz = { ...quiz, points: points, numOfQuestions: numOfQuestions };
         try {
           // Assuming you have an API method to update the quiz
           await quizzesClient.updateQuiz(updatedQuiz);
           // Assuming you have a Redux action to update the state
           dispatch(updateQuiz(updatedQuiz));
         } catch (error) {
-          console.error("Failed to update quiz points:", error);
+          console.error("Failed to update quiz points/num:", error);
         }
       }
     };
@@ -179,7 +177,7 @@ export default function QuizQuestionsEditor() {
               { location.pathname.includes(`${quid}`)? <QuestionEditor />
                 :  <div>
 
-                  <div className="float-end ">
+                  <div className="float-begin ">
                       
 
                         <a
@@ -203,7 +201,7 @@ export default function QuizQuestionsEditor() {
                         <div className="text-muted small">
                             <b>{question.questionType}</b> | {question.points ?? 'N/A'} pts <br/>
                         </div>
-                        <h6> {question.description} </h6>
+                        <h6> {parse(question.description)} </h6>
 
                         {determineQuestionRender(question)}
 
