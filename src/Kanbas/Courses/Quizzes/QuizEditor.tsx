@@ -11,6 +11,11 @@ export default function QuizEditor() {
 
     const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
     const quiz = quizzes.find((quiz: any) => quiz._id === qid);
+
+    if (!quiz) {
+        console.error("Invalid quiz data at index", quiz);
+        return null; // Skip rendering this item
+      }
     
 
     return (
