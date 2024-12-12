@@ -228,7 +228,7 @@ export default function QuizDetails() {
 
     <div className="mb-1 d-flex justify-content-center">
     <button id="wd-quiz-preview-btn" className="btn btn-lg btn-danger me-4 p-2"
-    //   onClick={ () => navigate(``) }
+      onClick={ () => navigate(`QuizPreview`) }
       >
         Start Quiz</button>
     </div>

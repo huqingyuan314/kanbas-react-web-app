@@ -19,6 +19,7 @@ import QuizQuestionsEditor from "./Quizzes/QuizQuestionsEditor";
 import Zoom from "./Zoom";
 import Piazza from "./Piazza";
 import QuestionEditor from "./Quizzes/Questions/QuestionEditor";
+import QuizResult from "./Quizzes/QuizResult";
 
 
 
@@ -79,6 +80,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
               </Route>
 
               <Route path="Quizzes/:qid/QuizPreview" element={<QuizPreview />} />
+              <Route path="Quizzes/:qid/QuizResult" element={<QuizResult />} />
 
 
 

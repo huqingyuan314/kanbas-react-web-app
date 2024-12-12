@@ -91,3 +91,25 @@ export const unenrollFromCourse = async (userId: string, courseId: string) => {
     return response.data;
    };
    
+
+// export const attemptUserInQuiz = async (userId: string, quizId: string) => {
+//     const response = await axiosWithCredentials.post(`${USERS_API}/${userId}/quizzes/${quizId}`);
+//     return response.data;
+//    };
+
+export const attemptUserInQuiz = async (userId: string, quizId: string, 
+                                        answers: any[], score: Number, isCompleted: Boolean) => {
+  const payload = {
+      answers: answers.map(answer => ({
+          question: answer.questionId,
+          answerText: [answer.answer], // Assuming `answer.answer` is the collected answer value
+          correct: undefined // This would need to be determined server-side unless you check it client-side
+      })),
+      score: undefined, // Assuming the score is calculated server-side
+      isCompleted: true, // Assuming the attempt is complete upon submission
+      attemptNumber: 1 // You would need to handle attempt counting possibly server-side or manage it before calling this function
+  };
+
+  const response = await axiosWithCredentials.post(`${USERS_API}/${userId}/quizzes/${quizId}`, payload);
+  return response.data;
+};
