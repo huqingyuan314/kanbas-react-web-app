@@ -22,14 +22,11 @@ interface QuizAttempt {
     attemptNumber: number;
     isCompleted: boolean;
 }
-
 interface QuizAnswer {
     question: string;
     answerText: string[];
     correct: boolean;
 }
-
-
 
 export default function QuizResult() {
   const { cid, qid } = useParams(); // Get quizId from URL params
@@ -44,19 +41,20 @@ export default function QuizResult() {
     (state: any) => state.questionsReducer.questions
   );
 
-  const fetchQuestions = async () => {
-    try {
-        const questions = await quizzesClient.findQuestionsForQuiz(qid as string);
-        dispatch(setQuestions(questions));
-      } catch (error) {
-        console.error("Failed to fetch questions:", error);
-      }
-    };
-    useEffect(() => {
-        if (qid) {
-            fetchQuestions();
-        }
-      }, [qid]);
+
+      const fetchQuestions = async () => {
+        try {
+            const questions = await quizzesClient.findQuestionsForQuiz(qid as string);
+            dispatch(setQuestions(questions));
+          } catch (error) {
+            console.error("Failed to fetch questions:", error);
+          }
+        };
+        useEffect(() => {
+            if (qid) {
+                fetchQuestions();
+            }
+          }, [qid]);
 
 
       function dateFormat(date: Date) {
@@ -67,23 +65,33 @@ export default function QuizResult() {
 
       
       const [newAnswer, setNewAnswer] = useState("");
+
+      const [attempts, setAttempts] = useState<any[]>([]);
       const [quizAttempt, setQuizAttempt] = useState<QuizAttempt | null>(null);
       
 
 
-useEffect(() => {
-    const fetchLatestAttempt = async () => {
-        try {
-            const response = await axiosWithCredentials.get(`/api/users/${currentUser._id}/quizzes/${qid}/latest-attempt`);
-            console.log("Latest attempt data:", response.data); // Log the data
-            setQuizAttempt(response.data);
-        } catch (error) {
-            console.error("Error fetching latest attempt:", error);
-            // Optionally set an error state to show an error message in the UI
-        }
-    };
-    fetchLatestAttempt();
-}, [qid, currentUser._id]); // Make sure dependencies are correctly listed
+    useEffect(() => {
+        const fetchAttempts = async () => {
+          try {
+            const response = await userClient.findAttemptsForUser(currentUser._id, qid);
+            console.log("Attempts fetched:", response); // Check the structure here
+            setAttempts(response);
+            const latestAttempt = response.sort((a:any, b:any) => new Date(b.attemptDate).getTime() - new Date(a.attemptDate).getTime())[0];
+            console.log("latestAttempt fetched:", latestAttempt); // Check the structure here
+            setQuizAttempt(latestAttempt);
+          } catch (error) {
+            console.error("Error fetching attempts:", error);
+          }
+        };
+    
+        fetchAttempts();
+      }, [currentUser._id]);
+
+
+    if (!quiz) {
+        return <p>Quiz data is not available.</p>;
+      }
 
     if (!quizAttempt) {
         return <p>Loading quiz attempt...</p>;
