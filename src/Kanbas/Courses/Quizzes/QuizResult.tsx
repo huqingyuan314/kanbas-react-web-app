@@ -95,7 +95,7 @@ export default function QuizResult() {
       }
 
     if (!quizAttempt) {
-        return <p>Loading quiz attempt...</p>;
+        return <p></p>;
     }
 
 
