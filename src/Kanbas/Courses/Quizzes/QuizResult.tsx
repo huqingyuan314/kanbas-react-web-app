@@ -68,6 +68,7 @@ export default function QuizResult() {
       
       const [newAnswer, setNewAnswer] = useState("");
       const [quizAttempt, setQuizAttempt] = useState<QuizAttempt | null>(null);
+      
 
 
 useEffect(() => {

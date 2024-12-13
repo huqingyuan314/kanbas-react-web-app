@@ -16,6 +16,9 @@ export default function QuizPreview() {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
+      // Check if the user has FACULTY role
+      const isFaculty = currentUser?.role === "FACULTY";
+
   const quizzes = useSelector((state: any) => state.quizzesReducer.quizzes);
   const quiz = quizzes.find((quiz: any) => quiz._id === qid);
 
@@ -194,6 +197,7 @@ function calculateScore(responses: any[]) {
     <div>
       <h3>{quiz.title}</h3>
 
+      {isFaculty && (
       <div className="mb-1 d-flex justify-content-center">
         <button
           onClick={() =>
@@ -209,6 +213,7 @@ function calculateScore(responses: any[]) {
           Edit Quiz
         </button>
       </div>
+      )}
 
       <hr />
 
