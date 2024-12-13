@@ -9,6 +9,7 @@ import * as quizzesClient from "./client";
 import * as userClient from "../../Account/client";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { FaCheck, FaTimes } from "react-icons/fa";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
 
@@ -59,8 +60,8 @@ export default function QuizResult() {
 
       function dateFormat(date: Date) {
         if (!date) return '';
-        const dueDate = new Date(date);
-        return dueDate.toISOString().slice(0, 10);
+        const format = new Date(date);
+        return format.toISOString().slice(0, 10);
     }
 
       
@@ -99,57 +100,109 @@ export default function QuizResult() {
 
 
 function determineQuestionResultRender(question: {
-    _id: any;
+    trueFalse: boolean;
+    choicesAnswer: never;
+    _id: string;
     blanks: never[];
     choices: never[];
     questionType: String;
 }) {
+    if (!quizAttempt) return <div>Loading or no attempt data available...</div>;
+    
+    const answer = quizAttempt.answers.find((ans: any) => ans.question === question._id);
+
     switch (question.questionType) {
-      case "MULTIPLE-CHOICE":
-        return (
-          <div>
-            <ul>
-              {question.choices.map((choice, index) => (
-                <li key={index}>
-                  <input disabled className="form-check-input ms-2 me-2" type="radio" 
-                  name={`question-${question._id}`} value={choice} />
-                  {choice}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-  
-      case "TRUE-FALSE":
-        return (
-          <div>
-            <ul>
-              <li>
-                <input disabled className="form-check-input ms-2 me-2" type="radio" 
-                name={`question-${question._id}`} value="true" /> True
-              </li>
-              <li>
-                <input disabled type="radio" className="form-check-input ms-2 me-2" 
-                name={`question-${question._id}`} value="false" /> False
-              </li>
-            </ul>
-          </div>
-        );
-  
-      case "FILL-BLANK":
-        return (
-          <div>
-            <input type="text" name={`question-${question._id}`}
-            placeholder="Enter your answer" className="form-control ms-4 me-2"
-            value={newAnswer}
-            onChange={ (e) => {setNewAnswer(e.target.value)} } />
-          </div>
-        );
-  
-      default:
-        return <div>Unsupported question type</div>;
+        case "MULTIPLE-CHOICE":
+            return (
+              <div>
+                <ul>
+                  {question.choices.map((choice, index) => (
+                    <li key={index}>
+                      <input disabled 
+                      className="form-check-input ms-2 me-2"
+                      type="radio" 
+                      name={`question-${question._id}`} 
+                      value={choice} 
+                      checked={answer?.answerText.includes(choice)}
+                      />
+                      <span className={`${
+                          choice === question.choicesAnswer ? "text-success" : 
+                          answer?.answerText.includes(choice) ? "text-danger" : ""
+                        }`}>
+                        {choice}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+
+            case "TRUE-FALSE":
+                return (
+                  <div>
+                    <ul>
+                      {["true", "false"].map((option, index) => (
+                        <li key={index}>
+                          <input disabled 
+                          className="form-check-input ms-2 me-2"
+                          type="radio" 
+                          name={`question-${question._id}`}
+                          value={option}
+                          checked={answer?.answerText.includes(option)}
+                          />
+                          <span className={`${
+                              (option === "true" && question.trueFalse) || (option === "false" && !question.trueFalse) ? "text-success" :
+                              answer?.answerText.includes(option) ? "text-danger" : ""
+                            }`}>
+                            {option.charAt(0).toUpperCase() + option.slice(1)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+
+        case "FILL-BLANK":
+            return (
+                <div>
+                    {answer && answer.answerText.map((ansText, index) => (
+                        <input key={index}
+                            type="text"
+                            name={`question-${question._id}`}
+                            className={`form-control ms-4 me-2 ${answer.correct ? "text-success" : "text-danger"}`}
+                            value={ansText}
+                            disabled
+                        />
+                    ))}
+                    <span className={`ms-4 me-2`}>Possible Answers:</span>
+                    {question && question.blanks.map((ansText, index) => (
+                        <input key={index}
+                            type="text"
+                            name={`question-${question._id}`}
+                            className={`form-control ms-4 me-2 text-success`}
+                            value={ansText}
+                            disabled
+                        />
+                    ))}
+                </div>
+            );
+
+        default:
+            return <div>Unsupported question type</div>;
     }
-  }
+}
+
+
+
+  const handleIcon =  (qid: String) => {
+    const answer = quizAttempt.answers.find((answer: any) => answer.question === qid);
+    if (answer && answer.correct) {
+        return <FaCheck className="text-success float-begin fs-3" />;
+    } else if (answer && !answer.correct) {
+        return <FaTimes className="text-danger float-begin fs-3" />;
+    }
+    return null;
+    };
 
 
 
@@ -202,7 +255,7 @@ function determineQuestionResultRender(question: {
             {dateFormat(quizAttempt.attemptDate)}
           </div>
           <div className="col-2 d-flex justify-content-begin align-items-center">
-            {`${quizAttempt.score} out of ${quiz.points}`}
+            <b>{`${quizAttempt.score}`}</b> &thinsp; {` out of ${quiz.points}`}
           </div>
           <div className="col-2 d-flex justify-content-begin align-items-center">
             <b></b>
@@ -228,10 +281,13 @@ function determineQuestionResultRender(question: {
                 <div className="d-flex align-items-center">
 
                  <div>
+                        {handleIcon(question._id)}
 
                         <span className="wd-question-link text-danger text-decoration-none">
                         {question.title}
                         </span>
+                        
+                        
 
                         <div className="text-muted small">
                             <b>{question.questionType}</b> | {question.points ?? 'N/A'} pts <br/>
@@ -246,6 +302,7 @@ function determineQuestionResultRender(question: {
                 </div>
             </div>
         </li>
+
     ))}
 </ul>
 

@@ -16,6 +16,7 @@ import { wait } from "@testing-library/user-event/dist/utils";
 import QuestionEditor from "./Questions/QuestionEditor";
 import { updateQuiz } from "./reducer";
 
+
 export default function QuizQuestionsEditor() {
 
     const { cid, qid, quid } = useParams();
@@ -129,17 +130,6 @@ export default function QuizQuestionsEditor() {
   }, [points, quiz, dispatch]); // Depend on totalPoints and quiz
 
 
-    // const saveQuestion = async (updatedQuestion: any) => {
-    //   try {
-    //     await questionsClient.updateQuestion(updatedQuestion); // API call
-    //     dispatch(updateQuestion(updatedQuestion)); // Update Redux state
-    //     navigate(-1); // Navigate back
-    //   } catch (error) {
-    //     console.error("Error updating question:", error);
-    //   }
-    // };
-
-
 
   return (
     <div>
@@ -235,9 +225,9 @@ export default function QuizQuestionsEditor() {
 
           <Link
           id="wd-quiz-save-btn"
-          
           to={`/Kanbas/Courses/${cid}/Quizzes/${qid}`}
           className="btn btn-lg btn-danger me-3"
+          // onClick={}
         >
           Save
         </Link>

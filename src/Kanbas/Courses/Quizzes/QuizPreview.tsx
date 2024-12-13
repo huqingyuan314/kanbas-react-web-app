@@ -10,6 +10,23 @@ import * as userClient from "../../Account/client";
 import { Link } from "react-router-dom";
 import { wait } from "@testing-library/user-event/dist/utils";
 
+
+interface QuizAttempt {
+    _id: string;
+    quiz: string;
+    user: string;
+    answers: QuizAnswer[];
+    score: number;
+    attemptDate: Date;
+    attemptNumber: number;
+    isCompleted: boolean;
+}
+interface QuizAnswer {
+    question: string;
+    answerText: string[];
+    correct: boolean;
+}
+
 export default function QuizPreview() {
   const { cid, qid } = useParams(); // Get quizId from URL params
   const dispatch = useDispatch();
@@ -42,6 +59,45 @@ export default function QuizPreview() {
 
       
       const [newAnswer, setNewAnswer] = useState("");
+
+      const [attempts, setAttempts] = useState<any[]>([]);
+      const [quizAttempt, setQuizAttempt] = useState<QuizAttempt | null>(null);
+
+      useEffect(() => {
+        const fetchAttempts = async () => {
+          try {
+            const response = await userClient.findAttemptsForUser(currentUser._id, qid);
+            console.log("Attempts fetched:", response); // Check the structure here
+            setAttempts(response);
+            const latestAttempt = response.sort((a:any, b:any) => new Date(b.attemptDate).getTime() - new Date(a.attemptDate).getTime())[0];
+            console.log("latestAttempt fetched:", latestAttempt); // Check the structure here
+            setQuizAttempt(latestAttempt);
+          } catch (error) {
+            console.error("Error fetching attempts:", error);
+          }
+        };
+    
+        fetchAttempts();
+      }, [currentUser._id]);
+
+  
+
+      useEffect(() => {
+        // Check if the user is a faculty and if the last quiz attempt was completed
+        if (currentUser?.role === "FACULTY" && quizAttempt?.isCompleted) {
+            // Navigate to QuizResult if conditions are met
+            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizResult`);
+        }
+    }, [cid, qid, currentUser, quizAttempt, navigate]);
+
+    //   {isFaculty && 
+    //     useEffect(() => {
+    //         if (quizAttempt?.isCompleted) {
+    //     navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizResult`);
+    //   }
+    // }, [qid]);
+    // }
+
 
 
 function determineQuestionPreviewRender(question: {

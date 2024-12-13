@@ -27,6 +27,7 @@ export default function QuizDetailsEditor() {
   const [shuffleAnswers, setShuffleAnswers] = useState<any>({});
   const [timeLimit, setTimeLimit] = useState("");
   const [multipleAttempts, setMultipleAttempts] = useState<any>({});
+  const [howManyAttempts, setHowManyAttempts] = useState("");
   const [showCorrectAnswers, setShowCorrectAnswers] = useState<any>({});
   const [accessCode, setAccessCode] = useState("");
   const [oneQuestionAtATime, setOneQuestionAtATime] = useState<any>({});
@@ -50,6 +51,7 @@ export default function QuizDetailsEditor() {
       setShuffleAnswers(quiz.shuffleAnswers);
       setTimeLimit(quiz.timeLimit);
       setMultipleAttempts(quiz.multipleAttempts);
+      setHowManyAttempts(quiz.howManyAttempts);
       setShowCorrectAnswers(quiz.showCorrectAnswers);
       setAccessCode(quiz.accessCode);
       setOneQuestionAtATime(quiz.oneQuestionAtATime);
@@ -211,6 +213,12 @@ export default function QuizDetailsEditor() {
       <label className="form-check-label" htmlFor="wd-quiz-multiple-attempts">Multiple Attempts</label><br />
     </div>
 
+    <div className="d-flex align-items-center">
+      <label className="form-check-label col-5" htmlFor="wd-quiz-howManyAttempts">How Many Attempts</label>
+      <input className="form-control me-2" id="wd-quiz-howManyAttempts" disabled={!isFaculty}
+      defaultValue={quiz.howManyAttempts} onChange={(e) => setHowManyAttempts(e.target.value)} />
+    </div>
+
     <div>
       <input className="form-check-input" type="checkbox" id="wd-quiz-showCorrectAnswers" disabled={!isFaculty}
       defaultChecked={quiz.showCorrectAnswers} 
@@ -316,6 +324,7 @@ export default function QuizDetailsEditor() {
                   shuffleAnswers,
                   timeLimit,
                   multipleAttempts,
+                  howManyAttempts,
                   showCorrectAnswers,
                   accessCode,
                   oneQuestionAtATime,
@@ -324,7 +333,6 @@ export default function QuizDetailsEditor() {
                   dueDate,
                   availableDate,
                   availableUntilDate,
-                //   published,
                 })
           }
           className="btn btn-lg btn-danger me-3"
@@ -346,6 +354,7 @@ export default function QuizDetailsEditor() {
             shuffleAnswers,
             timeLimit,
             multipleAttempts,
+            howManyAttempts,
             showCorrectAnswers,
             accessCode,
             oneQuestionAtATime,
