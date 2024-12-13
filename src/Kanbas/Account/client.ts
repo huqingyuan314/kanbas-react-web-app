@@ -111,6 +111,15 @@ export const findAttemptsForUser = async (userId: string, quizId: any) => {
 };
 
 
+export const getLatestAttemptNumber = async (userId: string, quizId: any) => {
+  const response = await axiosWithCredentials.get(
+    `${USERS_API}/${userId}/quizzes/${quizId}/attemptNumber`
+  );
+  return response.data;
+};
+
+
+
 export const attemptUserInQuiz = async (
   userId: string,
   quizId: string,
@@ -127,7 +136,7 @@ export const attemptUserInQuiz = async (
     })),
     score, 
     isCompleted, 
-    attemptNumber: 1, // need to handle attempt counting later
+    attemptNumber,
   };
 
   const response = await axiosWithCredentials.post(

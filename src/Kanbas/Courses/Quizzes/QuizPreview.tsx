@@ -63,6 +63,8 @@ export default function QuizPreview() {
       const [attempts, setAttempts] = useState<any[]>([]);
       const [quizAttempt, setQuizAttempt] = useState<QuizAttempt | null>(null);
 
+      const [attemptNumber, setAttemptNumber] = useState(1);
+
       useEffect(() => {
         const fetchAttempts = async () => {
           try {
@@ -89,14 +91,6 @@ export default function QuizPreview() {
             navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizResult`);
         }
     }, [cid, qid, currentUser, quizAttempt, navigate]);
-
-    //   {isFaculty && 
-    //     useEffect(() => {
-    //         if (quizAttempt?.isCompleted) {
-    //     navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizResult`);
-    //   }
-    // }, [qid]);
-    // }
 
 
 
@@ -152,6 +146,21 @@ function determineQuestionPreviewRender(question: {
         return <div>Unsupported question type</div>;
     }
   }
+
+
+//   useEffect(() => {
+//     const fetchAttemptNumber = async () => {
+//       try {
+//         const latestAttemptNumber = await userClient.getLatestAttemptNumber(currentUser._id, qid);
+//         setAttemptNumber(latestAttemptNumber + 1); // Prepare for the next attempt
+//       } catch (error) {
+//         console.error('Failed to fetch attempt number:', error);
+//       }
+//     };
+
+//     fetchAttemptNumber();
+//   }, [currentUser._id, qid]);
+
 
 
 const handleSubmitQuiz = async (quizId: string) => {
