@@ -4,7 +4,6 @@ const axiosWithCredentials = axios.create({ withCredentials: true });
 export const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
 
-
 export const createUser = async (user: any) => {
   const response = await axios.post(`${USERS_API}`, user);
   return response.data;
@@ -16,8 +15,7 @@ export const findAllUsers = async () => {
 };
 
 export const findUsersByRole = async (role: string) => {
-  const response = await
-    axios.get(`${USERS_API}?role=${role}`);
+  const response = await axios.get(`${USERS_API}?role=${role}`);
   return response.data;
 };
 
@@ -32,84 +30,100 @@ export const findUserById = async (id: string) => {
 };
 
 export const updateUser = async (user: any) => {
-  const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
-  return response.data;
-}; 
-
-export const deleteUser = async (userId: string) => {
-  const response = await axios.delete( `${USERS_API}/${userId}` );
+  const response = await axiosWithCredentials.put(
+    `${USERS_API}/${user._id}`,
+    user
+  );
   return response.data;
 };
 
-
-
+export const deleteUser = async (userId: string) => {
+  const response = await axios.delete(`${USERS_API}/${userId}`);
+  return response.data;
+};
 
 export const signin = async (credentials: any) => {
-  const response = await axiosWithCredentials.post( `${USERS_API}/signin`, credentials );
+  const response = await axiosWithCredentials.post(
+    `${USERS_API}/signin`,
+    credentials
+  );
   return response.data;
 };
 
 export const signup = async (user: any) => {
-    const response = await axiosWithCredentials.post(`${USERS_API}/signup`, user);
-    return response.data;
-  };
-  
-export const profile = async () => {
-    const response = await axiosWithCredentials.post(`${USERS_API}/profile`);
-    return response.data;
-  };
-  
-export const signout = async () => {
-    const response = await axiosWithCredentials.post(`${USERS_API}/signout`);
-    return response.data;
-  };
-  
-export const findMyCourses = async () => {
-    const { data } = await axiosWithCredentials.get(`${USERS_API}/current/courses`);
-    return data;
-  };
-  
-export const createCourse = async (course: any) => {
-    const { data } = await axiosWithCredentials.post(`${USERS_API}/current/courses`, course);
-    return data;
-  };
-  
+  const response = await axiosWithCredentials.post(`${USERS_API}/signup`, user);
+  return response.data;
+};
 
+export const profile = async () => {
+  const response = await axiosWithCredentials.post(`${USERS_API}/profile`);
+  return response.data;
+};
+
+export const signout = async () => {
+  const response = await axiosWithCredentials.post(`${USERS_API}/signout`);
+  return response.data;
+};
+
+export const findMyCourses = async () => {
+  const { data } = await axiosWithCredentials.get(
+    `${USERS_API}/current/courses`
+  );
+  return data;
+};
+
+export const createCourse = async (course: any) => {
+  const { data } = await axiosWithCredentials.post(
+    `${USERS_API}/current/courses`,
+    course
+  );
+  return data;
+};
 
 export const findCoursesForUser = async (userId: string) => {
-    const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/courses`);
-    return response.data;
-  };
-  
+  const response = await axiosWithCredentials.get(
+    `${USERS_API}/${userId}/courses`
+  );
+  return response.data;
+};
+
 export const enrollIntoCourse = async (userId: string, courseId: string) => {
-    const response = await axiosWithCredentials.post(`${USERS_API}/${userId}/courses/${courseId}`);
-    return response.data;
-   };
-   
+  const response = await axiosWithCredentials.post(
+    `${USERS_API}/${userId}/courses/${courseId}`
+  );
+  return response.data;
+};
+
 export const unenrollFromCourse = async (userId: string, courseId: string) => {
-    const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}/courses/${courseId}`);
-    return response.data;
-   };
-   
+  const response = await axiosWithCredentials.delete(
+    `${USERS_API}/${userId}/courses/${courseId}`
+  );
+  return response.data;
+};
 
-// export const attemptUserInQuiz = async (userId: string, quizId: string) => {
-//     const response = await axiosWithCredentials.post(`${USERS_API}/${userId}/quizzes/${quizId}`);
-//     return response.data;
-//    };
 
-export const attemptUserInQuiz = async (userId: string, quizId: string, 
-                                        answers: any[], score: Number, isCompleted: Boolean) => {
+export const attemptUserInQuiz = async (
+  userId: string,
+  quizId: string,
+  answers: any[],
+  score: number,
+  isCompleted: boolean,
+  attemptNumber: Number,
+) => {
   const payload = {
-      answers: answers.map(answer => ({
-          question: answer.questionId,
-          answerText: [answer.answer], // Assuming `answer.answer` is the collected answer value
-          correct: undefined // This would need to be determined server-side unless you check it client-side
-      })),
-      score: undefined, // Assuming the score is calculated server-side
-      isCompleted: true, // Assuming the attempt is complete upon submission
-      attemptNumber: 1 // You would need to handle attempt counting possibly server-side or manage it before calling this function
+    answers: answers.map((answer) => ({
+      question: answer.question,
+      answerText: answer.answerText,
+      correct: answer.correct,
+    })),
+    score, 
+    isCompleted, 
+    attemptNumber: 1, // need to handle attempt counting later
   };
 
-  const response = await axiosWithCredentials.post(`${USERS_API}/${userId}/quizzes/${quizId}`, payload);
+  const response = await axiosWithCredentials.post(
+    `${USERS_API}/${userId}/quizzes/${quizId}`,
+    payload
+  );
   return response.data;
 };

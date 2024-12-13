@@ -80,9 +80,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
               </Route>
 
               <Route path="Quizzes/:qid/QuizPreview" element={<QuizPreview />} />
-              <Route path="Quizzes/:qid/QuizResult" element={<QuizResult />} />
-
-
+              <Route path="Quizzes/:qid/QuizResult/*" element={<QuizResult />} />
 
 
 

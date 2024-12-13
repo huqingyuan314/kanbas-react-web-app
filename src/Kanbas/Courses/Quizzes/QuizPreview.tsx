@@ -4,10 +4,11 @@ import { useNavigate, useParams } from "react-router";
 import parse from "html-react-parser";
 import { RxTriangleDown } from "react-icons/rx";
 import { setQuestions } from "./Questions/reducer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as quizzesClient from "./client";
 import * as userClient from "../../Account/client";
 import { Link } from "react-router-dom";
+import { wait } from "@testing-library/user-event/dist/utils";
 
 export default function QuizPreview() {
   const { cid, qid } = useParams(); // Get quizId from URL params
@@ -35,6 +36,9 @@ export default function QuizPreview() {
             fetchQuestions();
         }
       }, [qid]);
+
+      
+      const [newAnswer, setNewAnswer] = useState("");
 
 
 function determineQuestionPreviewRender(question: {
@@ -65,11 +69,11 @@ function determineQuestionPreviewRender(question: {
             <ul>
               <li>
                 <input className="form-check-input ms-2 me-2" type="radio" 
-                name={`question-${question._id}`} value="True" /> True
+                name={`question-${question._id}`} value="true" /> True
               </li>
               <li>
                 <input type="radio" className="form-check-input ms-2 me-2" 
-                name={`question-${question._id}`} value="False" /> False
+                name={`question-${question._id}`} value="false" /> False
               </li>
             </ul>
           </div>
@@ -78,7 +82,10 @@ function determineQuestionPreviewRender(question: {
       case "FILL-BLANK":
         return (
           <div>
-            <input type="text" placeholder="Enter your answer" className="form-control ms-4 me-2" />
+            <input type="text" name={`question-${question._id}`}
+            placeholder="Enter your answer" className="form-control ms-4 me-2"
+            value={newAnswer}
+            onChange={ (e) => {setNewAnswer(e.target.value)} } />
           </div>
         );
   
@@ -88,73 +95,98 @@ function determineQuestionPreviewRender(question: {
   }
 
 
-//   const handleSubmitQuiz = async (quizId: string) => {
-//     const responses = questions.map((question: { _id: any; }) => {
-//       return {
-//         questionId: question._id,
-//         answer: document.querySelector(`input[name="question-${question._id}"]:checked`)?.value
-//       };
-//     });
-  
-//     try {
-//       await userClient.attemptUserInQuiz(currentUser._id, quizId);
-//       navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Results`);
-//     } catch (error) {
-//       console.error("Failed to submit quiz:", error);
-//     }
-//   };
-
-
 const handleSubmitQuiz = async (quizId: string) => {
-
     const responses = questions.map((question: any) => {
-      const answerText: any[] = []; // This could be an array if multiple answers are allowed
-      document.querySelectorAll(`input[name="question-${question._id}"]:checked`).forEach((input) => {
+      let answerText: any[] = [];
+      const inputs = document.querySelectorAll(`input[name="question-${question._id}"]:checked`);
+      const textInput = document.querySelector(`input[type="text"][name="question-${question._id}"]`);
+
+      console.log(`Found ${inputs.length} inputs for question ${question._id}`);
+
+      inputs.forEach((input) => {
         if (input instanceof HTMLInputElement) {
-          answerText.push(input.value); // Now TypeScript knows `input` has a `value` property.
+          console.log(`Adding answer: ${input.value}`);
+          answerText.push(input.value);
         }
       });
-  
-      // Assuming you have a way to determine if the answer is correct on the client-side
-      // It's more secure to handle this server-side
-      const correct = checkIfAnswerIsCorrect(question._id, answerText); 
-  
+
+        // Collect value from text input (for fill-in-the-blank)
+        if (textInput && textInput instanceof HTMLInputElement) {
+            answerText = [textInput.value]; // or push to include multiple answers
+        }
+
+      const correct = checkIfAnswerIsCorrect(question, answerText);
+        //  const correct = true; // for test
+
+      console.log(`Answers for question ${question._id}:`, answerText);
+
       return {
         question: question._id,
         answerText,
         correct,
+        points: question.points,
       };
     });
-  
-    const totalScore = calculateScore(responses); // Function to calculate score based on correct answers
-  
+
+    console.log("Final responses:", responses);
+
+    const totalScore = calculateScore(responses);
+    
     try {
-      // Assuming your API expects a POST request with a specific body
-      await userClient.attemptUserInQuiz(
+    const result = await userClient.attemptUserInQuiz(
         currentUser._id,
         quizId,
         responses,
         totalScore,
         true,
+        1,
       );
+      console.log("QuizAttempt result:", result);
       navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/QuizResult`);
+      
     } catch (error) {
       console.error("Failed to submit quiz:", error);
+      
     }
   };
+
+
+
+  function checkIfAnswerIsCorrect(question: any, answerText: any) {
+
+    switch (question.questionType) {
+        case "MULTIPLE-CHOICE":
+            // For multiple-choice, compare the selected answer with the correct answer
+            // `question.choicesAnswer` could be the value of the correct option
+            return answerText.includes(question.choicesAnswer);
+        
+        case "TRUE-FALSE":
+            // For true/false, `question.trueFalse` should be a boolean
+            // `answerText` should contain ['true'] or ['false'] as strings; convert to boolean to check
+            return answerText.some((answer: string) => (answer === 'true') === question.trueFalse);
+
+        case "FILL-BLANK":
+            // For fill-in-the-blanks, `question.blanks` could be an array of possible correct answers
+            // Check if any provided answer is in the array of correct answers
+            // This check is case-insensitive and assumes `answerText` is an array of answers
+            return answerText.some((answer: string) => 
+                question.blanks.map((correct: string) => correct.toLowerCase()).includes(answer.toLowerCase())
+            );
+
+        default:
+            return false;
+    }
+}
+
   
-  function checkIfAnswerIsCorrect(questionId: String, answerText: any) {
-    // This should check against the correct answers stored in the state or fetched
-    // For example, comparing with correct answers fetched with the quiz details
-    // This is a simplified placeholder
-    return answerText.includes("correct-answer-from-state");
+function calculateScore(responses: any[]) {
+    return responses.reduce((score, response) => {
+      // Add the question's point value if the answer was correct
+      return score + (response.correct ? response.points : 0);
+    }, 0);
   }
-  
-  function calculateScore(responses: any) {
-    // Calculate score based on the 'correct' field of each response
-    return responses.reduce((score: any, response: any) => score + (response.correct ? 1 : 0), 0);
-  }
-//   {question.points}
+
+
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -162,13 +194,13 @@ const handleSubmitQuiz = async (quizId: string) => {
     <div>
       <h3>{quiz.title}</h3>
 
-      <div className="mb-1 d-flex">
+      <div className="mb-1 d-flex justify-content-center">
         <button
           onClick={() =>
             navigate(`../Quizzes/${qid}/QuizEditor/QuizQuestionsEditor`)
           }
           id="wd-quiz-edit-btn"
-          className="btn btn-lg btn-secondary me-4"
+          className="btn btn-lg btn-secondary me-4 "
         >
           <MdOutlineEdit
             className="position-relative me-2"
@@ -235,14 +267,6 @@ const handleSubmitQuiz = async (quizId: string) => {
           <button
           id="wd-quiz-preview-submit-btn"
           type="button"
-        //   onClick={() => saveQuizAttempt({
-        //           _id: quiz._id,
-        //           title,
-        //           description,
-        //           quizType,
-        //           points,
-        //         })
-        //   }
 
         onClick={ () => handleSubmitQuiz(quiz._id) }
 
